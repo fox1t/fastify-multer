@@ -52,7 +52,7 @@ class DiskStorage implements StorageEngine {
         const finalPath = join(destination, filename!)
         const outStream = createWriteStream(finalPath)
 
-        file.stream.pipe(outStream)
+        file.stream!.pipe(outStream)
         outStream.on('error', cb)
         outStream.on('finish', function() {
           cb(null, {
@@ -67,7 +67,7 @@ class DiskStorage implements StorageEngine {
   }
 
   _removeFile(req: express.Request, file: File, cb: (error?: Error) => void): void {
-    const path = file.path
+    const path = file.path!
 
     delete file.destination
     delete file.filename

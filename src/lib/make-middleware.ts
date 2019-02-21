@@ -118,7 +118,7 @@ function makeMiddleware(setup: Setup) {
         }
       }
 
-      ;(appendField as any)(req.body, fieldname, value)
+      appendField(req.body, fieldname, value)
     })
 
     // handle files

@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { File } from '../interfaces'
+import { File, FilesObject } from '../interfaces'
 
 export type Strategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT'
 type Placeholder = {
@@ -48,13 +48,13 @@ class FileAppender {
       case 'VALUE':
         break
       case 'ARRAY':
-        this.req.files.push(placeholder)
+        ;(this.req.files as Partial<File>[]).push(placeholder)
         break
       case 'OBJECT':
-        if (this.req.files[file.fieldname]) {
-          this.req.files[file.fieldname].push(placeholder)
+        if ((this.req.files as FilesObject)[file.fieldname]) {
+          ;(this.req.files as FilesObject)[file.fieldname].push(placeholder)
         } else {
-          this.req.files[file.fieldname] = [placeholder]
+          ;(this.req.files as FilesObject)[file.fieldname] = [placeholder]
         }
         break
     }
@@ -68,13 +68,13 @@ class FileAppender {
       case 'VALUE':
         break
       case 'ARRAY':
-        arrayRemove(this.req.files, placeholder)
+        arrayRemove(this.req.files as Partial<File>[], placeholder)
         break
       case 'OBJECT':
-        if (this.req.files[placeholder.fieldname].length === 1) {
-          delete this.req.files[placeholder.fieldname]
+        if ((this.req.files as FilesObject)[placeholder.fieldname].length === 1) {
+          delete (this.req.files as FilesObject)[placeholder.fieldname]
         } else {
-          arrayRemove(this.req.files[placeholder.fieldname], placeholder)
+          arrayRemove((this.req.files as FilesObject)[placeholder.fieldname], placeholder)
         }
         break
     }

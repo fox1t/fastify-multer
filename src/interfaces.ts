@@ -1,16 +1,14 @@
 import express from 'express'
 import { Strategy } from './lib/file-appender'
 
+export type FilesObject = {
+  [fieldname: string]: Partial<File>[]
+}
 declare global {
   namespace Express {
     interface Request {
       file: File
-      files:
-        | {
-            [fieldname: string]: File[]
-          }
-        | File[]
-        | [{ [fieldname: string]: string }]
+      files: FilesObject | Partial<File>[]
     }
   }
 }
