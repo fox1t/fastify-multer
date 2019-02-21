@@ -20,24 +20,35 @@
   ],
   "dependencies": {
     "append-field": "^1.0.0",
-    "busboy": "^0.2.11",
-    "concat-stream": "^1.5.2",
+    "busboy": "^0.3.0",
+    "concat-stream": "^2.0.0",
     "mkdirp": "^0.5.1",
     "on-finished": "^2.3.0",
-    "type-is": "^1.6.4",
-    "xtend": "^4.0.0"
+    "type-is": "^1.6.16",
+    "xtend": "^4.0.1"
   },
   "devDependencies": {
+    "@types/busboy": "^0.2.3",
+    "@types/concat-stream": "^1.6.0",
+    "@types/express": "^4.16.1",
+    "@types/mkdirp": "^0.5.2",
+    "@types/node": "^11.9.4",
+    "@types/on-finished": "^2.3.1",
+    "@types/type-is": "^1.6.2",
+    "@types/xtend": "^4.0.2",
     "express": "^4.13.1",
     "form-data": "^1.0.0-rc1",
     "fs-temp": "^1.1.2",
     "mocha": "^3.5.3",
     "rimraf": "^2.4.1",
     "standard": "^11.0.1",
-    "testdata-w3c-json-form": "^0.2.0"
+    "testdata-w3c-json-form": "^0.2.0",
+    "tslint": "^5.12.1",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.3.3"
   },
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 8.0.0"
   },
   "files": [
     "LICENSE",
@@ -46,6 +57,6 @@
     "lib/"
   ],
   "scripts": {
-    "test": "standard && mocha"
+    "test": "mocha"
   }
 }
