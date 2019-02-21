@@ -3,7 +3,7 @@
 var assert = require('assert')
 
 var util = require('./_util')
-var multer = require('../')
+var { multer } = require('../lib')
 var temp = require('fs-temp')
 var rimraf = require('rimraf')
 var FormData = require('form-data')

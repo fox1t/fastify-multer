@@ -9,7 +9,7 @@ class MemoryStorage implements StorageEngine {
     file: File,
     cb: (error: Error | null, info?: Partial<File>) => void,
   ): void {
-    file.stream.pipe(
+    file.stream!.pipe(
       concat({ encoding: 'buffer' }, function(data) {
         cb(null, {
           buffer: data,

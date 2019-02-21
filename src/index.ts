@@ -102,7 +102,7 @@ class Multer {
   }
 }
 
-function multer(options?: Options) {
+export function multer(options?: Options) {
   if (options === undefined) {
     return new Multer({})
   }

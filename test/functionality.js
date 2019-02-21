@@ -3,7 +3,7 @@
 var assert = require('assert')
 
 var util = require('./_util')
-var multer = require('../')
+var { multer, diskStorage } = require('../lib')
 var temp = require('fs-temp')
 var rimraf = require('rimraf')
 var FormData = require('form-data')
@@ -13,7 +13,7 @@ function generateFilename (req, file, cb) {
 }
 
 function startsWith (str, start) {
-  return (str.substring(0, start.length) === start)
+  return str.substring(0, start.length) === start
 }
 
 describe('Functionality', function () {
@@ -25,7 +25,7 @@ describe('Functionality', function () {
 
       cleanup.push(uploadDir)
 
-      var storage = multer.diskStorage({
+      var storage = diskStorage({
         destination: uploadDir,
         filename: generateFilename
       })
@@ -107,7 +107,7 @@ describe('Functionality', function () {
   })
 
   it('should rename the destination directory to a different directory', function (done) {
-    var storage = multer.diskStorage({
+    var storage = diskStorage({
       destination: function (req, file, cb) {
         temp.template('testforme-%s').mkdir(function (err, uploadDir) {
           if (err) return cb(err)

@@ -3,12 +3,12 @@
 var assert = require('assert')
 
 var util = require('./_util')
-var multer = require('../')
+var { multer, memoryStorage } = require('../lib')
 var FormData = require('form-data')
 
 describe('File ordering', function () {
   it('should present files in same order as they came', function (done) {
-    var storage = multer.memoryStorage()
+    var storage = memoryStorage()
     var upload = multer({ storage: storage })
     var parser = upload.array('themFiles', 2)
 
@@ -17,7 +17,7 @@ describe('File ordering', function () {
     var pending = 2
     var _handleFile = storage._handleFile
     storage._handleFile = function (req, file, cb) {
-      var id = (i++)
+      var id = i++
 
       _handleFile.call(this, req, file, function (err, info) {
         if (err) return cb(err)

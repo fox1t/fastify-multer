@@ -4,7 +4,7 @@ var assert = require('assert')
 var stream = require('stream')
 
 var util = require('./_util')
-var multer = require('../')
+var { multer } = require('../lib')
 var FormData = require('form-data')
 var testData = require('testdata-w3c-json-form')
 

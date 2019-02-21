@@ -2,7 +2,7 @@
 
 var assert = require('assert')
 
-var multer = require('../')
+var { multer } = require('../lib')
 var util = require('./_util')
 
 var express = require('express')

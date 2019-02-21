@@ -4,7 +4,7 @@ var assert = require('assert')
 
 var path = require('path')
 var util = require('./_util')
-var multer = require('../')
+var { multer, diskStorage } = require('../lib')
 var temp = require('fs-temp')
 var rimraf = require('rimraf')
 var FormData = require('form-data')
@@ -16,7 +16,7 @@ describe('Unicode', function () {
     temp.mkdir(function (err, path) {
       if (err) return done(err)
 
-      var storage = multer.diskStorage({
+      var storage = diskStorage({
         destination: path,
         filename: function (req, file, cb) {
           cb(null, file.originalname)

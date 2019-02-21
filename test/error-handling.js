@@ -4,38 +4,34 @@ var assert = require('assert')
 
 var os = require('os')
 var util = require('./_util')
-var multer = require('../')
+var { multer, memoryStorage, diskStorage, MulterError } = require('../lib')
 var stream = require('stream')
 var FormData = require('form-data')
 
 function withLimits (limits, fields) {
-  var storage = multer.memoryStorage()
+  var storage = memoryStorage()
   return multer({ storage: storage, limits: limits }).fields(fields)
 }
 
 describe('Error Handling', function () {
-  it('should be an instance of both `Error` and `MulterError` classes in case of the Multer\'s error', function (done) {
+  it("should be an instance of both `Error` and `MulterError` classes in case of the Multer's error", function (done) {
     var form = new FormData()
-    var storage = multer.diskStorage({ destination: os.tmpdir() })
-    var upload = multer({storage: storage}).fields([
-      { name: 'small0', maxCount: 1 }
-    ])
+    var storage = diskStorage({ destination: os.tmpdir() })
+    var upload = multer({ storage: storage }).fields([{ name: 'small0', maxCount: 1 }])
 
     form.append('small0', util.file('small0.dat'))
     form.append('small0', util.file('small0.dat'))
 
     util.submitForm(upload, form, function (err, req) {
       assert.equal(err instanceof Error, true)
-      assert.equal(err instanceof multer.MulterError, true)
+      assert.equal(err instanceof MulterError, true)
       done()
     })
   })
 
   it('should respect parts limit', function (done) {
     var form = new FormData()
-    var parser = withLimits({ parts: 1 }, [
-      { name: 'small0', maxCount: 1 }
-    ])
+    var parser = withLimits({ parts: 1 }, [{ name: 'small0', maxCount: 1 }])
 
     form.append('field0', 'BOOM!')
     form.append('small0', util.file('small0.dat'))
@@ -81,9 +77,7 @@ describe('Error Handling', function () {
 
   it('should respect file key limit', function (done) {
     var form = new FormData()
-    var parser = withLimits({ fieldNameSize: 4 }, [
-      { name: 'small0', maxCount: 1 }
-    ])
+    var parser = withLimits({ fieldNameSize: 4 }, [{ name: 'small0', maxCount: 1 }])
 
     form.append('small0', util.file('small0.dat'))
 
@@ -135,9 +129,7 @@ describe('Error Handling', function () {
 
   it('should respect fields given', function (done) {
     var form = new FormData()
-    var parser = withLimits(undefined, [
-      { name: 'wrongname', maxCount: 1 }
-    ])
+    var parser = withLimits(undefined, [{ name: 'wrongname', maxCount: 1 }])
 
     form.append('small0', util.file('small0.dat'))
 
@@ -149,7 +141,7 @@ describe('Error Handling', function () {
   })
 
   it('should report errors from storage engines', function (done) {
-    var storage = multer.memoryStorage()
+    var storage = memoryStorage()
 
     storage._removeFile = function _removeFile (req, file, cb) {
       var err = new Error('Test error')
@@ -179,7 +171,7 @@ describe('Error Handling', function () {
 
   it('should report errors from busboy constructor', function (done) {
     var req = new stream.PassThrough()
-    var storage = multer.memoryStorage()
+    var storage = memoryStorage()
     var upload = multer({ storage: storage }).single('tiny0')
     var body = 'test'
 
@@ -198,7 +190,7 @@ describe('Error Handling', function () {
 
   it('should report errors from busboy parsing', function (done) {
     var req = new stream.PassThrough()
-    var storage = multer.memoryStorage()
+    var storage = memoryStorage()
     var upload = multer({ storage: storage }).single('tiny0')
     var boundary = 'AaB03x'
     var body = [
@@ -224,7 +216,7 @@ describe('Error Handling', function () {
 
   it('should gracefully handle more than one error at a time', function (done) {
     var form = new FormData()
-    var storage = multer.diskStorage({ destination: os.tmpdir() })
+    var storage = diskStorage({ destination: os.tmpdir() })
     var upload = multer({ storage: storage, limits: { fileSize: 1, files: 1 } }).fields([
       { name: 'small0', maxCount: 1 }
     ])

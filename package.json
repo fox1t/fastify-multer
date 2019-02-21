@@ -40,7 +40,8 @@
     "form-data": "^1.0.0-rc1",
     "fs-temp": "^1.1.2",
     "mocha": "^3.5.3",
-    "rimraf": "^2.4.1",
+    "prettier": "^1.16.4",
+    "rimraf": "^2.6.3",
     "standard": "^11.0.1",
     "testdata-w3c-json-form": "^0.2.0",
     "tslint": "^5.12.1",
@@ -57,6 +58,14 @@
     "lib/"
   ],
   "scripts": {
+    "prebuild": "npm run clean-build && npm run lint",
+    "build": "tsc -p ./tsconfig.json",
+    "clean-build": "rimraf ./lib && mkdir lib",
+    "prettier": "prettier --loglevel warn --write \"src/**/*.{ts,tsx}\"",
+    "prelint": "npm run prettier",
+    "lint": "tslint --fix -c tslint.json -t stylish -p ./tsconfig.json",
+    "update": "npx npm-check -u",
+    "prepublishOnly": "npm run build",
     "test": "mocha"
   }
 }

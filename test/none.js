@@ -3,7 +3,7 @@
 var assert = require('assert')
 
 var util = require('./_util')
-var multer = require('../')
+var { multer } = require('../lib')
 var FormData = require('form-data')
 
 describe('None', function () {
