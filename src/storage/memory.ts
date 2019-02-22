@@ -1,11 +1,12 @@
-import express from 'express'
+import { IncomingMessage } from 'http'
+import { FastifyRequest } from 'fastify'
 import concat from 'concat-stream'
 
 import { StorageEngine, File } from '../interfaces'
 
 class MemoryStorage implements StorageEngine {
   _handleFile(
-    req: express.Request,
+    req: FastifyRequest<IncomingMessage>,
     file: File,
     cb: (error: Error | null, info?: Partial<File>) => void,
   ): void {
@@ -19,7 +20,7 @@ class MemoryStorage implements StorageEngine {
     )
   }
 
-  _removeFile(req: express.Request, file: File, cb: (error?: Error) => void) {
+  _removeFile(req: FastifyRequest<IncomingMessage>, file: File, cb: (error?: Error) => void) {
     delete file.buffer
     cb(undefined)
   }

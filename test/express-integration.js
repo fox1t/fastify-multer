@@ -5,58 +5,59 @@ var assert = require('assert')
 var { multer } = require('../lib')
 var util = require('./_util')
 
-var express = require('express')
+var Fastify = require('fastify')
 var FormData = require('form-data')
 var concat = require('concat-stream')
 var onFinished = require('on-finished')
 
-var port = 34279
-
 describe('Express Integration', function () {
-  var app
-
-  before(function (done) {
-    app = express()
-    app.listen(port, done)
-  })
-
-  function submitForm (form, path, cb) {
+  function submitForm (form, path, port, cb) {
     var req = form.submit('http://localhost:' + port + path)
 
     req.on('error', cb)
     req.on('response', function (res) {
       res.on('error', cb)
-      res.pipe(concat({ encoding: 'buffer' }, function (body) {
-        onFinished(req, function () { cb(null, res, body) })
-      }))
+      res.pipe(
+        concat({ encoding: 'buffer' }, function (body) {
+          onFinished(req, function () {
+            cb(null, res, body)
+          })
+        })
+      )
     })
   }
 
   it('should work with express error handling', function (done) {
     var limits = { fileSize: 200 }
     var upload = multer({ limits: limits })
-    var router = new express.Router()
     var form = new FormData()
 
     var routeCalled = 0
     var errorCalled = 0
 
     form.append('avatar', util.file('large.jpg'))
+    const fastify = Fastify()
 
-    router.post('/profile', upload.single('avatar'), function (req, res, next) {
-      routeCalled++
-      res.status(200).end('SUCCESS')
-    })
-
-    router.use(function (err, req, res, next) {
-      assert.equal(err.code, 'LIMIT_FILE_SIZE')
+    fastify.setErrorHandler(function (error, request, reply) {
+      assert.equal(error.code, 'LIMIT_FILE_SIZE')
 
       errorCalled++
-      res.status(500).end('ERROR')
+      reply.code(500).end('ERROR')
     })
 
-    app.use('/t1', router)
-    submitForm(form, '/t1/profile', function (err, res, body) {
+    fastify.route({
+      method: 'POST',
+      url: '/t1/profile',
+      preHandler: upload.single('avatar'),
+      handler: function (req, res, next) {
+        routeCalled++
+        res.code(200).end('SUCCESS')
+      }
+    })
+
+    fastify.listen(34279, done)
+
+    submitForm(form, '/t1/profile', 34279, function (err, res, body) {
       assert.ifError(err)
 
       assert.equal(routeCalled, 0)
@@ -64,6 +65,7 @@ describe('Express Integration', function () {
       assert.equal(body.toString(), 'ERROR')
       assert.equal(res.statusCode, 500)
 
+      fastify.close()
       done()
     })
   })
@@ -74,7 +76,7 @@ describe('Express Integration', function () {
     }
 
     var upload = multer({ fileFilter: fileFilter })
-    var router = new express.Router()
+    const fastify = Fastify()
     var form = new FormData()
 
     var routeCalled = 0
@@ -82,27 +84,33 @@ describe('Express Integration', function () {
 
     form.append('avatar', util.file('large.jpg'))
 
-    router.post('/profile', upload.single('avatar'), function (req, res, next) {
-      routeCalled++
-      res.status(200).end('SUCCESS')
-    })
-
-    router.use(function (err, req, res, next) {
-      assert.equal(err.message, 'TEST')
+    fastify.setErrorHandler(function (error, request, reply) {
+      assert.equal(error.message, 'TEST')
 
       errorCalled++
-      res.status(500).end('ERROR')
+      reply.status(500).end('ERROR')
     })
 
-    app.use('/t2', router)
-    submitForm(form, '/t2/profile', function (err, res, body) {
+    fastify.route({
+      method: 'POST',
+      url: '/t2/profile',
+      preHandler: upload.single('avatar'),
+      handler: function (req, res, next) {
+        routeCalled++
+        res.code(200).end('SUCCESS')
+      }
+    })
+
+    fastify.listen(34280, done)
+
+    submitForm(form, '/t2/profile', 34280, function (err, res, body) {
       assert.ifError(err)
 
       assert.equal(routeCalled, 0)
       assert.equal(errorCalled, 1)
       assert.equal(body.toString(), 'ERROR')
       assert.equal(res.statusCode, 500)
-
+      fastify.close()
       done()
     })
   })

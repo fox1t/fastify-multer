@@ -52,9 +52,9 @@ describe('Fields', function () {
         name: 'Multer',
         key: '',
         abc: '',
-        checkboxfull: [ 'cb1', 'cb2' ],
-        checkboxhalfempty: [ 'cb1', '' ],
-        checkboxempty: [ '', '' ]
+        checkboxfull: ['cb1', 'cb2'],
+        checkboxhalfempty: ['cb1', ''],
+        checkboxempty: ['', '']
       })
       done()
     })
@@ -70,7 +70,7 @@ describe('Fields', function () {
       'content-length': 11
     }
 
-    parser(req, null, function (err) {
+    parser({ req }, null, function (err) {
       assert.ifError(err)
       assert.equal(req.hasOwnProperty('body'), false)
       assert.equal(req.hasOwnProperty('files'), false)
@@ -88,7 +88,7 @@ describe('Fields', function () {
       'content-length': 11
     }
 
-    parser(req, null, function (err) {
+    parser({ req }, null, function (err) {
       assert.ifError(err)
       assert.equal(req.hasOwnProperty('body'), false)
       assert.equal(req.hasOwnProperty('files'), false)
@@ -125,7 +125,7 @@ describe('Fields', function () {
         obj: {
           '0': 'a',
           '2': 'c',
-          'x': 'yz'
+          x: 'yz'
         }
       })
       done()

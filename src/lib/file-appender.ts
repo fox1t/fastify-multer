@@ -1,5 +1,5 @@
-import express from 'express'
-
+import { IncomingMessage } from 'http'
+import { FastifyRequest } from 'fastify'
 import { File, FilesObject } from '../interfaces'
 
 export type Strategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT'
@@ -16,11 +16,11 @@ function arrayRemove(arr: any[], item: Placeholder) {
 
 class FileAppender {
   strategy: Strategy
-  req: express.Request
+  request: FastifyRequest<IncomingMessage>
 
-  constructor(strategy: Strategy, req: express.Request) {
+  constructor(strategy: Strategy, request: FastifyRequest<IncomingMessage>) {
     this.strategy = strategy
-    this.req = req
+    this.request = request
 
     switch (strategy) {
       case 'NONE':
@@ -28,10 +28,10 @@ class FileAppender {
       case 'VALUE':
         break
       case 'ARRAY':
-        req.files = []
+        request.files = []
         break
       case 'OBJECT':
-        req.files = Object.create(null)
+        request.files = Object.create(null)
         break
       default:
         throw new Error('Unknown file strategy: ' + strategy)
@@ -48,13 +48,13 @@ class FileAppender {
       case 'VALUE':
         break
       case 'ARRAY':
-        ;(this.req.files as Partial<File>[]).push(placeholder)
+        ;(this.request.files as Partial<File>[]).push(placeholder)
         break
       case 'OBJECT':
-        if ((this.req.files as FilesObject)[file.fieldname]) {
-          ;(this.req.files as FilesObject)[file.fieldname].push(placeholder)
+        if ((this.request.files as FilesObject)[file.fieldname]) {
+          ;(this.request.files as FilesObject)[file.fieldname].push(placeholder)
         } else {
-          ;(this.req.files as FilesObject)[file.fieldname] = [placeholder]
+          ;(this.request.files as FilesObject)[file.fieldname] = [placeholder]
         }
         break
     }
@@ -68,20 +68,20 @@ class FileAppender {
       case 'VALUE':
         break
       case 'ARRAY':
-        arrayRemove(this.req.files as Partial<File>[], placeholder)
+        arrayRemove(this.request.files as Partial<File>[], placeholder)
         break
       case 'OBJECT':
-        if ((this.req.files as FilesObject)[placeholder.fieldname].length === 1) {
-          delete (this.req.files as FilesObject)[placeholder.fieldname]
+        if ((this.request.files as FilesObject)[placeholder.fieldname].length === 1) {
+          delete (this.request.files as FilesObject)[placeholder.fieldname]
         } else {
-          arrayRemove((this.req.files as FilesObject)[placeholder.fieldname], placeholder)
+          arrayRemove((this.request.files as FilesObject)[placeholder.fieldname], placeholder)
         }
         break
     }
   }
   replacePlaceholder(placeholder: Placeholder, file: File) {
     if (this.strategy === 'VALUE') {
-      this.req.file = file
+      this.request.file = file
       return
     }
 

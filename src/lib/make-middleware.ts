@@ -1,4 +1,5 @@
-import express from 'express'
+import { IncomingMessage, ServerResponse } from 'http'
+import { FastifyRequest, FastifyReply } from 'fastify'
 import is from 'type-is'
 import Busboy from 'busboy'
 import extend from 'xtend'
@@ -9,21 +10,21 @@ import Counter from './counter'
 import MulterError, { ErrorMessages } from './multer-error'
 import FileAppender from './file-appender'
 import removeUploadedFiles, { RemoveUploadedFileError } from './remove-uploaded-files'
-
 import { Setup, File } from '../interfaces'
+
 type UploadError = { storageErrors?: RemoveUploadedFileError[] } & Error
 
 function drainStream(stream: NodeJS.ReadableStream) {
   stream.on('readable', stream.read.bind(stream))
 }
 
-function makeMiddleware(setup: Setup) {
-  return function multerMiddleware(
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction,
+function makeBeforeHandler(setup: Setup) {
+  return function multerBeforeHandler(
+    request: FastifyRequest<IncomingMessage>,
+    reply: FastifyReply<ServerResponse>,
+    next: (err?: Error) => void,
   ) {
-    if (!is(req, ['multipart'])) {
+    if (!is(request.req, ['multipart'])) {
       return next()
     }
 
@@ -35,17 +36,21 @@ function makeMiddleware(setup: Setup) {
     const fileStrategy = options.fileStrategy
     const preservePath = options.preservePath
 
-    req.body = Object.create(null)
+    request.body = Object.create(null)
 
     let busboy: busboy.Busboy
 
     try {
-      busboy = new Busboy({ headers: req.headers, limits: limits, preservePath: preservePath })
+      busboy = new Busboy({
+        headers: request.req.headers,
+        limits: limits,
+        preservePath: preservePath,
+      })
     } catch (err) {
       return next(err)
     }
 
-    const appender = new FileAppender(fileStrategy, req)
+    const appender = new FileAppender(fileStrategy, request)
     let isDone = false
     let readFinished = false
     let errorOccured = false
@@ -58,11 +63,11 @@ function makeMiddleware(setup: Setup) {
       }
       isDone = true
 
-      req.unpipe(busboy)
-      drainStream(req)
+      request.req.unpipe(busboy)
+      drainStream(request.req)
       busboy.removeAllListeners()
 
-      onFinished(req, function() {
+      onFinished(request.req, function() {
         next(err)
       })
     }
@@ -81,7 +86,7 @@ function makeMiddleware(setup: Setup) {
 
       pendingWrites.onceZero(function() {
         function remove(file: File, cb: (error?: Error) => void) {
-          storage._removeFile(req, file, cb)
+          storage._removeFile(request, file, cb)
         }
 
         removeUploadedFiles(uploadedFiles, remove, function(
@@ -118,7 +123,7 @@ function makeMiddleware(setup: Setup) {
         }
       }
 
-      appendField(req.body, fieldname, value)
+      appendField(request.body, fieldname, value)
     })
 
     // handle files
@@ -144,7 +149,7 @@ function makeMiddleware(setup: Setup) {
 
       const placeholder = appender.insertPlaceholder(file)
 
-      fileFilter(req, file, function(err: UploadError, includeFile?: boolean) {
+      fileFilter(request, file, function(err: UploadError, includeFile?: boolean) {
         if (err) {
           appender.removePlaceholder(placeholder)
           return abortWithError(err)
@@ -174,7 +179,7 @@ function makeMiddleware(setup: Setup) {
           abortWithCode('LIMIT_FILE_SIZE', fieldname)
         })
 
-        storage._handleFile(req, file, function(error: Error | null, info: Partial<File>) {
+        storage._handleFile(request, file, function(error: Error | null, info: Partial<File>) {
           if (aborting) {
             appender.removePlaceholder(placeholder)
             uploadedFiles.push(extend(file, info))
@@ -214,7 +219,8 @@ function makeMiddleware(setup: Setup) {
       indicateDone()
     })
 
-    req.pipe(busboy)
+    request.req.pipe(busboy)
   }
 }
-export default makeMiddleware
+
+export default makeBeforeHandler

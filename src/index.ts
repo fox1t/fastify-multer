@@ -1,5 +1,6 @@
-import express from 'express'
-import makeMiddleware from './lib/make-middleware'
+import { IncomingMessage, Server, ServerResponse } from 'http'
+import { FastifyRequest, FastifyMiddleware } from 'fastify'
+import makeBeforeHandler from './lib/make-middleware'
 import diskStorage from './storage/disk'
 import memoryStorage from './storage/memory'
 import MulterError from './lib/multer-error'
@@ -15,7 +16,7 @@ import {
 } from './interfaces'
 import { Strategy } from './lib/file-appender'
 
-function allowAll(req: express.Request, file: File, cb: FileFilterCallback) {
+function allowAll(req: FastifyRequest<IncomingMessage>, file: File, cb: FileFilterCallback) {
   cb(null, true)
 }
 
@@ -52,7 +53,11 @@ class Multer {
         }
       })
 
-      function wrappedFileFilter(req: express.Request, file: File, cb: FileFilterCallback) {
+      function wrappedFileFilter(
+        req: FastifyRequest<IncomingMessage>,
+        file: File,
+        cb: FileFilterCallback,
+      ) {
         if ((filesLeft[file.fieldname] || 0) <= 0) {
           return cb(new MulterError('LIMIT_UNEXPECTED_FILE', file.fieldname))
         }
@@ -70,26 +75,29 @@ class Multer {
       }
     }
 
-    return makeMiddleware(setup)
+    return makeBeforeHandler(setup)
   }
 
-  single(name: string): express.RequestHandler {
+  single(name: string): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
     return this._makeMiddleware([{ name, maxCount: 1 }], 'VALUE')
   }
 
-  array(name: string, maxCount: number): express.RequestHandler {
+  array(
+    name: string,
+    maxCount: number,
+  ): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
     return this._makeMiddleware([{ name, maxCount }], 'ARRAY')
   }
 
-  fields(fields: Field[]): express.RequestHandler {
+  fields(fields: Field[]): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
     return this._makeMiddleware(fields, 'OBJECT')
   }
 
-  none(): express.RequestHandler {
+  none(): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
     return this._makeMiddleware([], 'NONE')
   }
 
-  any(): express.RequestHandler {
+  any(): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
     const setup: Setup = () => ({
       limits: this.limits,
       preservePath: this.preservePath,
@@ -98,7 +106,7 @@ class Multer {
       fileStrategy: 'ARRAY',
     })
 
-    return makeMiddleware(setup)
+    return makeBeforeHandler(setup)
   }
 }
 

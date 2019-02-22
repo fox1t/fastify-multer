@@ -1,16 +1,9 @@
-import express from 'express'
+import { IncomingMessage } from 'http'
+import { FastifyRequest } from 'fastify'
 import { Strategy } from './lib/file-appender'
 
 export type FilesObject = {
   [fieldname: string]: Partial<File>[]
-}
-declare global {
-  namespace Express {
-    interface Request {
-      file: File
-      files: FilesObject | Partial<File>[]
-    }
-  }
 }
 
 export interface Field {
@@ -44,7 +37,11 @@ export interface File {
 
 export type FileFilterCallback = (error: Error | null, acceptFile?: boolean) => void
 
-export type FileFilter = (req: Express.Request, file: File, callback: FileFilterCallback) => void
+export type FileFilter = (
+  req: FastifyRequest<IncomingMessage>,
+  file: File,
+  callback: FileFilterCallback,
+) => void
 
 export interface Options {
   /** The destination directory for the uploaded files. */
@@ -79,21 +76,25 @@ export interface Options {
 
 export interface StorageEngine {
   _handleFile(
-    req: express.Request,
+    req: FastifyRequest<IncomingMessage>,
     file: File,
     callback: (error: Error | null, info?: Partial<File>) => void,
   ): void
-  _removeFile(req: express.Request, file: File, callback: (error?: Error) => void): void
+  _removeFile(
+    req: FastifyRequest<IncomingMessage>,
+    file: File,
+    callback: (error?: Error) => void,
+  ): void
 }
 
 export type GetFileName = (
-  req: Express.Request,
+  req: FastifyRequest<IncomingMessage>,
   file: File,
   callback: (error: Error | null, filename?: string) => void,
 ) => void
 
 export type GetDestination = (
-  req: Express.Request,
+  req: FastifyRequest<IncomingMessage>,
   file: File,
   callback: (error: Error | null, destination: string) => void,
 ) => void

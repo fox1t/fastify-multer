@@ -1,4 +1,6 @@
-import express from 'express';
+/// <reference types="node" />
+import { IncomingMessage } from 'http';
+import { FastifyRequest } from 'fastify';
 import { File } from '../interfaces';
 export declare type Strategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT';
 declare type Placeholder = {
@@ -6,8 +8,8 @@ declare type Placeholder = {
 };
 declare class FileAppender {
     strategy: Strategy;
-    req: express.Request;
-    constructor(strategy: Strategy, req: express.Request);
+    request: FastifyRequest<IncomingMessage>;
+    constructor(strategy: Strategy, request: FastifyRequest<IncomingMessage>);
     insertPlaceholder(file: Pick<File, 'fieldname' | 'originalname' | 'encoding' | 'mimetype'>): {
         fieldname: string;
     };

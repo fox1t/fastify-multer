@@ -28,8 +28,11 @@ exports.submitForm = function submitForm (multer, form, cb) {
       'content-length': length
     }
 
-    multer(req, null, function (err) {
-      onFinished(req, function () { cb(err, req) })
+    const request = { req }
+    multer(request, null, function (err) {
+      onFinished(req, function () {
+        cb(err, request)
+      })
     })
   })
 }
