@@ -66,6 +66,7 @@
     "lint": "tslint --fix -c tslint.json -t stylish -p ./tsconfig.json",
     "update": "npx npm-check -u",
     "prepublishOnly": "npm run build",
+    "pretest": "npm run build",
     "test": "mocha"
   }
 }
