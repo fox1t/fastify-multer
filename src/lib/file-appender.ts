@@ -1,6 +1,9 @@
 import { IncomingMessage } from 'http'
 import { FastifyRequest } from 'fastify'
 import { File, FilesObject } from '../interfaces'
+import { isMultipart } from './fastify-plugin'
+
+type FilesInRequest = FilesObject | Partial<File>[]
 
 export type Strategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT'
 type Placeholder = {
@@ -13,12 +16,17 @@ function arrayRemove(arr: any[], item: Placeholder) {
     arr.splice(idx, 1)
   }
 }
+export interface ExtendedFastifyRequest<T> extends FastifyRequest<T> {
+  isMultipart: typeof isMultipart
+  file: File
+  files: FilesInRequest
+}
 
 class FileAppender {
   strategy: Strategy
-  request: FastifyRequest<IncomingMessage>
+  request: ExtendedFastifyRequest<IncomingMessage>
 
-  constructor(strategy: Strategy, request: FastifyRequest<IncomingMessage>) {
+  constructor(strategy: Strategy, request: ExtendedFastifyRequest<IncomingMessage>) {
     this.strategy = strategy
     this.request = request
 

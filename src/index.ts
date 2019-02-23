@@ -1,9 +1,10 @@
 import { IncomingMessage, Server, ServerResponse } from 'http'
 import { FastifyRequest, FastifyMiddleware } from 'fastify'
-import makeBeforeHandler from './lib/make-middleware'
+import makeBeforeHandler from './lib/make-beforehandler'
 import diskStorage from './storage/disk'
 import memoryStorage from './storage/memory'
 import MulterError from './lib/multer-error'
+import fastifyPlugin from './lib/fastify-plugin'
 
 import {
   Field,
@@ -25,6 +26,7 @@ class Multer {
   limits: Options['limits']
   preservePath: Options['preservePath']
   fileFilter: FileFilter
+  contentParser: typeof fastifyPlugin
 
   constructor(options: Options) {
     if (options.storage) {
@@ -38,9 +40,10 @@ class Multer {
     this.limits = options.limits
     this.preservePath = options.preservePath
     this.fileFilter = options.fileFilter || allowAll
+    this.contentParser = fastifyPlugin
   }
 
-  _makeMiddleware(fields: Field[], fileStrategy: Strategy) {
+  private _makeBeforeHandler(fields: Field[], fileStrategy: Strategy) {
     const setup: Setup = () => {
       const fileFilter = this.fileFilter
       const filesLeft = Object.create(null)
@@ -79,22 +82,22 @@ class Multer {
   }
 
   single(name: string): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
-    return this._makeMiddleware([{ name, maxCount: 1 }], 'VALUE')
+    return this._makeBeforeHandler([{ name, maxCount: 1 }], 'VALUE')
   }
 
   array(
     name: string,
-    maxCount: number,
+    maxCount?: number,
   ): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
-    return this._makeMiddleware([{ name, maxCount }], 'ARRAY')
+    return this._makeBeforeHandler([{ name, maxCount }], 'ARRAY')
   }
 
   fields(fields: Field[]): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
-    return this._makeMiddleware(fields, 'OBJECT')
+    return this._makeBeforeHandler(fields, 'OBJECT')
   }
 
   none(): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
-    return this._makeMiddleware([], 'NONE')
+    return this._makeBeforeHandler([], 'NONE')
   }
 
   any(): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
@@ -123,6 +126,7 @@ export function multer(options?: Options) {
 }
 
 export default multer
+export { default as contentParser } from './lib/fastify-plugin'
 export { default as diskStorage } from './storage/disk'
 export { default as memoryStorage } from './storage/memory'
 export { default as MulterError } from './lib/multer-error'

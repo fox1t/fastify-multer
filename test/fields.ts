@@ -1,40 +1,40 @@
-/* eslint-env mocha */
+import assert from 'assert'
+import stream from 'stream'
+import { Server, IncomingMessage, ServerResponse } from 'http'
+import { FastifyMiddleware } from 'fastify'
 
-var assert = require('assert')
-var stream = require('stream')
+import { submitForm } from './_util'
+import multer from '../src'
+import FormData from 'form-data'
+import testData from 'testdata-w3c-json-form'
 
-var util = require('./_util')
-var { multer } = require('../lib')
-var FormData = require('form-data')
-var testData = require('testdata-w3c-json-form')
+describe('Fields', function() {
+  let parser: FastifyMiddleware<Server, IncomingMessage, ServerResponse>
 
-describe('Fields', function () {
-  var parser
-
-  before(function () {
+  before(function() {
     parser = multer().fields([])
   })
 
-  it('should process multiple fields', function (done) {
-    var form = new FormData()
+  it('should process multiple fields', function(done) {
+    const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('key', 'value')
     form.append('abc', 'xyz')
 
-    util.submitForm(parser, form, function (err, req) {
+    submitForm(parser, form, function(err, req) {
       assert.ifError(err)
       assert.deepEqual(req.body, {
         name: 'Multer',
         key: 'value',
-        abc: 'xyz'
+        abc: 'xyz',
       })
       done()
     })
   })
 
-  it('should process empty fields', function (done) {
-    var form = new FormData()
+  it('should process empty fields', function(done) {
+    const form = new FormData()
 
     form.append('name', 'Multer')
     form.append('key', '')
@@ -46,7 +46,7 @@ describe('Fields', function () {
     form.append('checkboxempty', '')
     form.append('checkboxempty', '')
 
-    util.submitForm(parser, form, function (err, req) {
+    submitForm(parser, form, function(err, req) {
       assert.ifError(err)
       assert.deepEqual(req.body, {
         name: 'Multer',
@@ -54,23 +54,22 @@ describe('Fields', function () {
         abc: '',
         checkboxfull: ['cb1', 'cb2'],
         checkboxhalfempty: ['cb1', ''],
-        checkboxempty: ['', '']
+        checkboxempty: ['', ''],
       })
       done()
     })
   })
 
-  it('should not process non-multipart POST request', function (done) {
-    var req = new stream.PassThrough()
+  it('should not process non-multipart POST request', function(done) {
+    const req = new stream.PassThrough() as stream.PassThrough & { method: string; headers: any }
 
     req.end('name=Multer')
     req.method = 'POST'
     req.headers = {
       'content-type': 'application/x-www-form-urlencoded',
-      'content-length': 11
+      'content-length': 11,
     }
-
-    parser({ req }, null, function (err) {
+    ;(parser as any)({ req }, null, function(err) {
       assert.ifError(err)
       assert.equal(req.hasOwnProperty('body'), false)
       assert.equal(req.hasOwnProperty('files'), false)
@@ -78,17 +77,16 @@ describe('Fields', function () {
     })
   })
 
-  it('should not process non-multipart GET request', function (done) {
-    var req = new stream.PassThrough()
+  it('should not process non-multipart GET request', function(done) {
+    const req = new stream.PassThrough() as stream.PassThrough & { method: string; headers: any }
 
     req.end('name=Multer')
     req.method = 'GET'
     req.headers = {
       'content-type': 'application/x-www-form-urlencoded',
-      'content-length': 11
+      'content-length': 11,
     }
-
-    parser({ req }, null, function (err) {
+    ;(parser as any)({ req }, null, function(err) {
       assert.ifError(err)
       assert.equal(req.hasOwnProperty('body'), false)
       assert.equal(req.hasOwnProperty('files'), false)
@@ -96,15 +94,15 @@ describe('Fields', function () {
     })
   })
 
-  testData.forEach(function (test) {
-    it('should handle ' + test.name, function (done) {
-      var form = new FormData()
+  testData.forEach(function(test) {
+    it('should handle ' + test.name, function(done) {
+      const form = new FormData()
 
-      test.fields.forEach(function (field) {
+      test.fields.forEach(function(field) {
         form.append(field.key, field.value)
       })
 
-      util.submitForm(parser, form, function (err, req) {
+      submitForm(parser, form, function(err, req) {
         assert.ifError(err)
         assert.deepEqual(req.body, test.expected)
         done()
@@ -112,21 +110,21 @@ describe('Fields', function () {
     })
   })
 
-  it('should convert arrays into objects', function (done) {
-    var form = new FormData()
+  it('should convert arrays into objects', function(done) {
+    const form = new FormData()
 
     form.append('obj[0]', 'a')
     form.append('obj[2]', 'c')
     form.append('obj[x]', 'yz')
 
-    util.submitForm(parser, form, function (err, req) {
+    submitForm(parser, form, function(err, req) {
       assert.ifError(err)
       assert.deepEqual(req.body, {
         obj: {
           '0': 'a',
           '2': 'c',
-          x: 'yz'
-        }
+          x: 'yz',
+        },
       })
       done()
     })

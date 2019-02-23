@@ -5,7 +5,7 @@ import { FastifyInstance } from 'fastify'
 const kMultipart = Symbol('multipart')
 
 function setMultipart(req: IncomingMessage, done: (err: Error | null) => void) {
-  // nothing to do, it will be done by the Request.multipart object
+  // nothing to do, it will be done by multer in beforeHandler method
   ;(req as any)[kMultipart] = true
   done(null)
 }

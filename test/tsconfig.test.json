@@ -4,8 +4,6 @@
     "declaration": true,
     "target": "es2016",
     "module": "commonjs",
-    "outDir": "lib",
-    "rootDir": "src",
     "pretty": true,
     "noEmitOnError": true,
     "experimentalDecorators": true,
@@ -19,8 +17,8 @@
       "es2018"
     ],
     "typeRoots": [
-      "./node_modules/@types",
-      "./src/types/",
+      "../node_modules/@types",
+      "../src/types/",
   ]
   },
   "formatCodeOptions": {
@@ -29,11 +27,8 @@
   },
   "exclude": [
     "node_modules",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "**/__*__"
   ],
   "include": [
-    "./src/**/*.ts"
+    "./**/*.ts"
   ]
 }

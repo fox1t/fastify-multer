@@ -5,7 +5,8 @@
   "contributors": [
     "Hage Yaapa <captain@hacksparrow.com> (http://www.hacksparrow.com)",
     "Jaret Pfluger <https://github.com/jpfluger>",
-    "Linus Unnebäck <linus@folkdatorn.se>"
+    "Linus Unnebäck <linus@folkdatorn.se>",
+    "Maksim Sinik <maksim@sinik.it>"
   ],
   "license": "MIT",
   "repository": "expressjs/multer",
@@ -19,6 +20,7 @@
     "middleware"
   ],
   "dependencies": {
+    "@types/mocha": "^5.2.6",
     "append-field": "^1.0.0",
     "busboy": "^0.3.0",
     "concat-stream": "^2.0.0",
@@ -46,12 +48,13 @@
     "rimraf": "^2.6.3",
     "standard": "^11.0.1",
     "testdata-w3c-json-form": "^0.2.0",
+    "ts-node": "^8.0.2",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.3.3"
   },
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">= .0.0"
   },
   "files": [
     "LICENSE",
@@ -68,7 +71,6 @@
     "lint": "tslint --fix -c tslint.json -t stylish -p ./tsconfig.json",
     "update": "npx npm-check -u",
     "prepublishOnly": "npm run build",
-    "pretest": "npm run build",
-    "test": "mocha"
+    "test": "mocha --require test/tshook.js ./test/*.ts"
   }
 }
