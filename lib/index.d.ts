@@ -13,7 +13,7 @@ declare class Multer {
     fileFilter: FileFilter;
     contentParser: typeof contentParser;
     constructor(options: Options);
-    private _makeBeforeHandler;
+    private _makePreHandler;
     single(name: string): FastifyMiddleware<Server, IncomingMessage, ServerResponse>;
     array(name: string, maxCount?: number): FastifyMiddleware<Server, IncomingMessage, ServerResponse>;
     fields(fields: Field[]): FastifyMiddleware<Server, IncomingMessage, ServerResponse>;

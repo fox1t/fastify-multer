@@ -1,6 +1,6 @@
 import { IncomingMessage, Server, ServerResponse } from 'http'
 import { FastifyRequest, FastifyMiddleware } from 'fastify'
-import makeBeforeHandler from './lib/make-prehandler'
+import makePreHandler from './lib/make-prehandler'
 import diskStorage from './storage/disk'
 import memoryStorage from './storage/memory'
 import MulterError from './lib/multer-error'
@@ -43,7 +43,7 @@ class Multer {
     this.contentParser = contentParser
   }
 
-  private _makeBeforeHandler(fields: Field[], fileStrategy: Strategy) {
+  private _makePreHandler(fields: Field[], fileStrategy: Strategy) {
     const setup: Setup = () => {
       const fileFilter = this.fileFilter
       const filesLeft = Object.create(null)
@@ -78,26 +78,26 @@ class Multer {
       }
     }
 
-    return makeBeforeHandler(setup)
+    return makePreHandler(setup)
   }
 
   single(name: string): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
-    return this._makeBeforeHandler([{ name, maxCount: 1 }], 'VALUE')
+    return this._makePreHandler([{ name, maxCount: 1 }], 'VALUE')
   }
 
   array(
     name: string,
     maxCount?: number,
   ): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
-    return this._makeBeforeHandler([{ name, maxCount }], 'ARRAY')
+    return this._makePreHandler([{ name, maxCount }], 'ARRAY')
   }
 
   fields(fields: Field[]): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
-    return this._makeBeforeHandler(fields, 'OBJECT')
+    return this._makePreHandler(fields, 'OBJECT')
   }
 
   none(): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
-    return this._makeBeforeHandler([], 'NONE')
+    return this._makePreHandler([], 'NONE')
   }
 
   any(): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
@@ -109,7 +109,7 @@ class Multer {
       fileStrategy: 'ARRAY',
     })
 
-    return makeBeforeHandler(setup)
+    return makePreHandler(setup)
   }
 }
 

@@ -29,7 +29,7 @@ Don't forget the `enctype="multipart/form-data"` in your form.
 
 ```javascript
 const fastify = require('fastify') // or import fastify from 'fastify'
-const multer = require('multer') // or import multer from 'multer'
+const multer = require('fastify-multer') // or import multer from 'fastify-multer'
 const upload = multer({ dest: 'uploads/' })
 
 const server = fastify()
@@ -80,7 +80,7 @@ In case you need to handle a text-only multipart form, you should use the `.none
 
 ```javascript
 const fastify = require('fastify')
-const multer = require('multer')
+const multer = require('fastify-multer')
 const server = fastify()
 const upload = multer()
 
