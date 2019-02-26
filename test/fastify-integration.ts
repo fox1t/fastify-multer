@@ -1,6 +1,6 @@
 import assert from 'assert'
 
-import multer, { contentParser } from '../src'
+import multer from '../src'
 import { file } from './_util'
 import { AddressInfo } from 'net'
 
@@ -37,7 +37,7 @@ describe('Fastify Integration', function() {
     form.append('avatar', file('large.jpg'))
     const fastify = Fastify()
 
-    fastify.register(contentParser)
+    fastify.register(multer.contentParser)
 
     fastify.setErrorHandler(function(error: any, request, reply) {
       assert.equal(error.code, 'LIMIT_FILE_SIZE')
@@ -49,7 +49,7 @@ describe('Fastify Integration', function() {
     fastify.route({
       method: 'POST',
       url: '/t1/profile',
-      beforeHandler: upload.single('avatar'),
+      preHandler: upload.single('avatar'),
       handler: function(request, reply) {
         routeCalled++
         reply.code(200).send('SUCCESS')
@@ -88,7 +88,7 @@ describe('Fastify Integration', function() {
 
     form.append('avatar', file('large.jpg'))
 
-    fastify.register(contentParser)
+    fastify.register(multer.contentParser)
 
     fastify.setErrorHandler(function(error, request, reply) {
       assert.equal(error.message, 'TEST')
@@ -100,7 +100,7 @@ describe('Fastify Integration', function() {
     fastify.route({
       method: 'POST',
       url: '/t2/profile',
-      beforeHandler: upload.single('avatar'),
+      preHandler: upload.single('avatar'),
       handler: function(request, reply) {
         routeCalled++
         reply.code(200).send('SUCCESS')

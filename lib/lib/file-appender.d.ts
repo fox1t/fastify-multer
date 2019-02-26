@@ -2,7 +2,7 @@
 import { IncomingMessage } from 'http';
 import { FastifyRequest } from 'fastify';
 import { File, FilesObject } from '../interfaces';
-import { isMultipart } from './fastify-plugin';
+import { isMultipart } from './content-parser';
 declare type FilesInRequest = FilesObject | Partial<File>[];
 export declare type Strategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT';
 declare type Placeholder = {

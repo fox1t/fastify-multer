@@ -1,7 +1,7 @@
 import assert from 'assert'
 
 import { file, submitForm, fileSize } from './_util'
-import multer, { diskStorage } from '../src'
+import multer from '../src'
 import temp from 'fs-temp'
 import rimraf from 'rimraf'
 import FormData from 'form-data'
@@ -25,7 +25,7 @@ describe('Functionality', function() {
 
       cleanup.push(uploadDir)
 
-      const storage = diskStorage({
+      const storage = multer.diskStorage({
         destination: uploadDir,
         filename: generateFilename,
       })
@@ -117,7 +117,7 @@ describe('Functionality', function() {
   })
 
   it('should rename the destination directory to a different directory', function(done) {
-    const storage = diskStorage({
+    const storage = multer.diskStorage({
       destination: function(req, f, cb) {
         temp.template('testforme-%s').mkdir(function(err, uploadDir) {
           if (err) {

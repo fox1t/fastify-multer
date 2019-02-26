@@ -3,7 +3,7 @@ import assert from 'assert'
 import fs from 'fs'
 import path from 'path'
 import { file, fileSize, submitForm } from './_util'
-import multer, { diskStorage } from '../src'
+import multer from '../src'
 import temp from 'fs-temp'
 import rimraf from 'rimraf'
 import FormData from 'form-data'
@@ -172,7 +172,7 @@ describe('Disk Storage', function() {
       cb(null, directory)
     }
 
-    const storage = diskStorage({ destination: dest })
+    const storage = multer.diskStorage({ destination: dest })
     const localUpload = multer({ storage: storage })
     const parser = localUpload.single('tiny0')
     const form = new FormData()

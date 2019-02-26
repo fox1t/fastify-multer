@@ -2,19 +2,19 @@ import assert from 'assert'
 
 import os from 'os'
 import { file, submitForm } from './_util'
-import multer, { memoryStorage, diskStorage, MulterError } from '../src'
+import multer from '../src'
 import stream from 'stream'
 import FormData from 'form-data'
 
 function withLimits(limits, fields) {
-  const storage = memoryStorage()
+  const storage = multer.memoryStorage()
   return multer({ storage: storage, limits: limits }).fields(fields)
 }
 
 describe('Error Handling', function() {
   it("should be an instance of both `Error` and `MulterError` classes in case of the Multer's error", function(done) {
     const form = new FormData()
-    const storage = diskStorage({ destination: os.tmpdir() })
+    const storage = multer.diskStorage({ destination: os.tmpdir() })
     const upload = multer({ storage: storage }).fields([{ name: 'small0', maxCount: 1 }])
 
     form.append('small0', file('small0.dat'))
@@ -22,7 +22,7 @@ describe('Error Handling', function() {
 
     submitForm(upload, form, function(err, req) {
       assert.equal(err instanceof Error, true)
-      assert.equal(err instanceof MulterError, true)
+      assert.equal(err instanceof multer.MulterError, true)
       done()
     })
   })
@@ -139,7 +139,7 @@ describe('Error Handling', function() {
   })
 
   it('should report errors from storage engines', function(done) {
-    const storage = memoryStorage()
+    const storage = multer.memoryStorage()
 
     storage._removeFile = function _removeFile(req, _, cb) {
       const err: any = new Error('Test error')
@@ -169,7 +169,7 @@ describe('Error Handling', function() {
 
   it('should report errors from busboy constructor', function(done) {
     const req = new stream.PassThrough() as stream.PassThrough & { headers: any }
-    const storage = memoryStorage()
+    const storage = multer.memoryStorage()
     const upload: any = multer({ storage: storage }).single('tiny0')
     const body = 'test'
 
@@ -189,7 +189,7 @@ describe('Error Handling', function() {
 
   it('should report errors from busboy parsing', function(done) {
     const req = new stream.PassThrough() as stream.PassThrough & { headers: any }
-    const storage = memoryStorage()
+    const storage = multer.memoryStorage()
     const upload: any = multer({ storage: storage }).single('tiny0')
     const boundary = 'AaB03x'
     const body = [
@@ -215,7 +215,7 @@ describe('Error Handling', function() {
 
   it('should gracefully handle more than one error at a time', function(done) {
     const form = new FormData()
-    const storage = diskStorage({ destination: os.tmpdir() })
+    const storage = multer.diskStorage({ destination: os.tmpdir() })
     const upload = multer({ storage: storage, limits: { fileSize: 1, files: 1 } }).fields([
       { name: 'small0', maxCount: 1 },
     ])

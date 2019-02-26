@@ -1,12 +1,12 @@
 import assert from 'assert'
 
 import { file, submitForm } from './_util'
-import multer, { memoryStorage } from '../src'
+import multer from '../src'
 import FormData from 'form-data'
 
 describe('File ordering', function() {
   it('should present files in same order as they came', function(done) {
-    const storage = memoryStorage()
+    const storage = multer.memoryStorage()
     const upload = multer({ storage: storage })
     const parser = upload.array('themFiles', 2)
 

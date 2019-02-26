@@ -19,8 +19,8 @@ function drainStream(stream: NodeJS.ReadableStream) {
   stream.on('readable', stream.read.bind(stream))
 }
 
-function makeBeforeHandler(setup: Setup) {
-  return function multerBeforeHandler(
+function makePreHandler(setup: Setup) {
+  return function multerPreHandler(
     request: ExtendedFastifyRequest<IncomingMessage>,
     reply: FastifyReply<ServerResponse>,
     next: (err?: Error) => void,
@@ -224,4 +224,4 @@ function makeBeforeHandler(setup: Setup) {
   }
 }
 
-export default makeBeforeHandler
+export default makePreHandler

@@ -1,27 +1,24 @@
-# Multer [![Build Status](https://travis-ci.org/expressjs/multer.svg?branch=master)](https://travis-ci.org/expressjs/multer) [![NPM version](https://badge.fury.io/js/multer.svg)](https://badge.fury.io/js/multer) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
+# Multer
+[![NPM version](https://img.shields.io/npm/v/arecibo.svg?style=flat)](https://www.npmjs.com/package/fastify-multer)
+[![NPM downloads](https://img.shields.io/npm/dm/arecibo.svg?style=flat)](https://www.npmjs.com/package/arecibo)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-Multer is a node.js middleware for handling `multipart/form-data`, which is primarily used for uploading files. It is written
+This package is a port to Fastify of [express multer](https://github.com/expressjs/multer).
+
+Multer is a Fastify plugin for handling `multipart/form-data`, which is primarily used for uploading files. It is written
 on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 **NOTE**: Multer will not process any form which is not multipart (`multipart/form-data`).
 
-## Translations 
-
-This README is also available in other languages:
-
-- [简体中文](https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md) (Chinese)
-- [한국어](https://github.com/expressjs/multer/blob/master/doc/README-ko.md) (Korean)
-- [Русский язык](https://github.com/expressjs/multer/blob/master/doc/README-ru.md) (Russian)
-
 ## Installation
 
 ```sh
-$ npm install --save multer
+$ npm install --save fastify-multer
 ```
 
 ## Usage
 
-Multer adds a `body` object and a `file` or `files` object to the `request` object. The `body` object contains the values of the text fields of the form, the `file` or `files` object contains the files uploaded via the form.
+Multer adds a `body` object and a `file` or `files` object to the Fastify's `request` object. The `body` object contains the values of the text fields of the form, the `file` or `files` object contains the files uploaded via the form.
 
 Basic usage example:
 
@@ -34,44 +31,70 @@ Don't forget the `enctype="multipart/form-data"` in your form.
 ```
 
 ```javascript
-var express = require('express')
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
+const fastify = require('fastify') // or import fastify from 'fastify'
+const multer = require('multer') // or import multer from 'multer'
+const upload = multer({ dest: 'uploads/' })
 
-var app = express()
+const server = fastify()
+// register fastify content parser
+server.register(multer.contentParser)
 
-app.post('/profile', upload.single('avatar'), function (req, res, next) {
-  // req.file is the `avatar` file
-  // req.body will hold the text fields, if there were any
+server.route({
+  method: 'POST',
+  url: '/profile',
+  preHandler: upload.single('avatar'),
+  handler: function(request, reply) {
+    // request.file is the `avatar` file
+    // request.body will hold the text fields, if there were any
+    reply.code(200).send('SUCCESS')
+  }
 })
 
-app.post('/photos/upload', upload.array('photos', 12), function (req, res, next) {
-  // req.files is array of `photos` files
-  // req.body will contain the text fields, if there were any
+server.route({
+  method: 'POST',
+  url: '/photos/upload',
+  preHandler: upload.array('photos', 12),
+  handler: function(request, reply) {
+    // request.files is array of `photos` files
+    // request.body will contain the text fields, if there were any
+    reply.code(200).send('SUCCESS')
+  }
 })
 
-var cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
-app.post('/cool-profile', cpUpload, function (req, res, next) {
-  // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
-  //
-  // e.g.
-  //  req.files['avatar'][0] -> File
-  //  req.files['gallery'] -> Array
-  //
-  // req.body will contain the text fields, if there were any
+const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+server.route({
+  method: 'POST',
+  url: '/cool-profile',
+  preHandler: cpUpload,
+  handler: function(request, reply) {
+    // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
+    //
+    // e.g.
+    //  req.files['avatar'][0] -> File
+    //  req.files['gallery'] -> Array
+    //
+    // req.body will contain the text fields, if there were any
+    reply.code(200).send('SUCCESS')
+  }
 })
 ```
 
 In case you need to handle a text-only multipart form, you should use the `.none()` method:
 
 ```javascript
-var express = require('express')
-var app = express()
-var multer  = require('multer')
-var upload = multer()
+const fastify = require('fastify')
+const multer = require('multer')
+const server = fastify()
+const upload = multer()
 
-app.post('/profile', upload.none(), function (req, res, next) {
-  // req.body contains the text fields
+server.route({
+  method: 'POST',
+  url: '/profile',
+  preHandler: upload.none(),
+  handler: function(request, reply) {
+    // req.body contains the text fields
+    reply.code(200).send('SUCCESS')
+  }
 })
 ```
 
@@ -115,7 +138,7 @@ In an average web app, only `dest` might be required, and configured as shown in
 the following example.
 
 ```javascript
-var upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'uploads/' })
 ```
 
 If you want more control over your uploads, you'll want to use the `storage`
@@ -170,7 +193,7 @@ where you are handling the uploaded files.
 The disk storage engine gives you full control on storing files to disk.
 
 ```javascript
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
@@ -179,7 +202,7 @@ var storage = multer.diskStorage({
   }
 })
 
-var upload = multer({ storage: storage })
+const upload = multer({ storage: storage })
 ```
 
 There are two options available, `destination` and `filename`. They are both
@@ -201,10 +224,10 @@ include any file extension.
 **Note:** Multer will not append any file extension for you, your function
 should return a filename complete with an file extension.
 
-Each function gets passed both the request (`req`) and some information about
+Each function gets passed both the Fastify's request (`request`) and some information about
 the file (`file`) to aid with the decision.
 
-Note that `req.body` might not have been fully populated yet. It depends on the
+Note that `request.body` might not have been fully populated yet. It depends on the
 order that the client transmits fields and files to the server.
 
 #### `MemoryStorage`
@@ -213,8 +236,8 @@ The memory storage engine stores the files in memory as `Buffer` objects. It
 doesn't have any options.
 
 ```javascript
-var storage = multer.memoryStorage()
-var upload = multer({ storage: storage })
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 ```
 
 When using memory storage, the file info will contain a field called
@@ -248,7 +271,7 @@ Set this to a function to control which files should be uploaded and which
 should be skipped. The function should look like this:
 
 ```javascript
-function fileFilter (req, file, cb) {
+function fileFilter (request, file, cb) {
 
   // The function should call `cb` with a boolean
   // to indicate if the file should be accepted
@@ -267,32 +290,15 @@ function fileFilter (req, file, cb) {
 
 ## Error handling
 
-When encountering an error, Multer will delegate the error to Express. You can
-display a nice error page using [the standard express way](http://expressjs.com/guide/error-handling.html).
+When encountering an error, Multer will delegate the error to Fastify. You can
+display a nice error page using [the standard fastify way](https://www.fastify.io/docs/v2.0.x/Server/#seterrorhandler).
 
 If you want to catch errors specifically from Multer, you can call the
-middleware function by yourself. Also, if you want to catch only [the Multer errors](https://github.com/expressjs/multer/blob/master/lib/multer-error.js), you can use the `MulterError` class that is attached to the `multer` object itself (e.g. `err instanceof multer.MulterError`).
-
-```javascript
-var multer = require('multer')
-var upload = multer().single('avatar')
-
-app.post('/profile', function (req, res) {
-  upload(req, res, function (err) {
-    if (err instanceof multer.MulterError) {
-      // A Multer error occurred when uploading.
-    } else if (err) {
-      // An unknown error occurred when uploading.
-    }
-
-    // Everything went fine.
-  })
-})
-```
+middleware function by yourself. Also, if you want to catch only [the Multer errors](https://github.com/fox1t/multer/blob/master/src/lib/multer-error.ts), you can use the `MulterError` class that is attached to the `multer` object itself (e.g. `err instanceof multer.MulterError`).
 
 ## Custom storage engine
 
-For information on how to build your own storage engine, see [Multer Storage Engine](https://github.com/expressjs/multer/blob/master/StorageEngine.md).
+For information on how to build your own storage engine, see [Multer Storage Engine](https://github.com/fox1t/multer/blob/master/StorageEngine.md).
 
 ## License
 

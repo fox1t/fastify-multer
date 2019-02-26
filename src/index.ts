@@ -1,10 +1,10 @@
 import { IncomingMessage, Server, ServerResponse } from 'http'
 import { FastifyRequest, FastifyMiddleware } from 'fastify'
-import makeBeforeHandler from './lib/make-beforehandler'
+import makeBeforeHandler from './lib/make-prehandler'
 import diskStorage from './storage/disk'
 import memoryStorage from './storage/memory'
 import MulterError from './lib/multer-error'
-import fastifyPlugin from './lib/fastify-plugin'
+import contentParser from './lib/content-parser'
 
 import {
   Field,
@@ -26,7 +26,7 @@ class Multer {
   limits: Options['limits']
   preservePath: Options['preservePath']
   fileFilter: FileFilter
-  contentParser: typeof fastifyPlugin
+  contentParser: typeof contentParser
 
   constructor(options: Options) {
     if (options.storage) {
@@ -40,7 +40,7 @@ class Multer {
     this.limits = options.limits
     this.preservePath = options.preservePath
     this.fileFilter = options.fileFilter || allowAll
-    this.contentParser = fastifyPlugin
+    this.contentParser = contentParser
   }
 
   private _makeBeforeHandler(fields: Field[], fileStrategy: Strategy) {
@@ -113,7 +113,16 @@ class Multer {
   }
 }
 
-export function multer(options?: Options) {
+interface MulterFactory {
+  (options?: Options | undefined): Multer
+  contentParser: typeof contentParser
+  diskStorage: typeof diskStorage
+  memoryStorage: typeof memoryStorage
+  MulterError: typeof MulterError
+  default: MulterFactory
+}
+
+const multer: any = function(options?: Options) {
   if (options === undefined) {
     return new Multer({})
   }
@@ -125,8 +134,10 @@ export function multer(options?: Options) {
   throw new TypeError('Expected object for argument options')
 }
 
-export default multer
-export { default as contentParser } from './lib/fastify-plugin'
-export { default as diskStorage } from './storage/disk'
-export { default as memoryStorage } from './storage/memory'
-export { default as MulterError } from './lib/multer-error'
+multer.contentParser = contentParser
+multer.diskStorage = diskStorage
+multer.memoryStorage = memoryStorage
+multer.MulterError = MulterError
+multer.default = multer
+
+export = multer as MulterFactory

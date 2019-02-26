@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import path from 'path'
 import { file, fileSize, submitForm } from './_util'
-import multer, { diskStorage } from '../src'
+import multer from '../src'
 import temp from 'fs-temp'
 import rimraf from 'rimraf'
 import FormData from 'form-data'
@@ -16,7 +16,7 @@ describe('Unicode', function() {
         return done(err)
       }
 
-      const storage = diskStorage({
+      const storage = multer.diskStorage({
         destination: p,
         filename: function(req, f, cb) {
           cb(null, f.originalname)

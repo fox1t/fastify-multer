@@ -4,7 +4,7 @@ Storage engines are classes that expose two functions: `_handleFile` and `_remov
 Follow the template below to get started with your own custom storage engine.
 
 When asking the user for input (such as where to save this file), always give
-them the parameters `req, file, cb`, in this order. This makes it easier for
+them the parameters `request, file, cb`, in this order. This makes it easier for
 developers to switch between storage engines.
 
 For example, in the template below, the engine saves the files to the disk. The
@@ -12,8 +12,8 @@ user tells the engine where to save the file, and this is done by
 providing the `destination` parameter:
 
 ```javascript
-var storage = myCustomStorage({
-  destination: function (req, file, cb) {
+const storage = myCustomStorage({
+  destination: function (request, file, cb) {
     cb(null, '/var/www/uploads/' + file.originalname)
   }
 })
@@ -27,7 +27,7 @@ this data somewhere, and when you are done, call `cb` with some information on t
 file.
 
 The information you provide in the callback will be merged with multer's file object,
-and then presented to the user via `req.files`.
+and then presented to the user via `request.files`.
 
 Your engine is also responsible for removing files if an error is encountered
 later on. Multer will decide which files to delete and when. Your storage class must
@@ -37,9 +37,9 @@ implement the `_removeFile` function. It will receive the same arguments as
 ## Template
 
 ```javascript
-var fs = require('fs')
+const fs = require('fs')
 
-function getDestination (req, file, cb) {
+function getDestination (request, file, cb) {
   cb(null, '/dev/null')
 }
 
@@ -47,8 +47,8 @@ function MyCustomStorage (opts) {
   this.getDestination = (opts.destination || getDestination)
 }
 
-MyCustomStorage.prototype._handleFile = function _handleFile (req, file, cb) {
-  this.getDestination(req, file, function (err, path) {
+MyCustomStorage.prototype._handleFile = function _handleFile (request, file, cb) {
+  this.getDestination(request, file, function (err, path) {
     if (err) return cb(err)
 
     var outStream = fs.createWriteStream(path)
@@ -64,7 +64,7 @@ MyCustomStorage.prototype._handleFile = function _handleFile (req, file, cb) {
   })
 }
 
-MyCustomStorage.prototype._removeFile = function _removeFile (req, file, cb) {
+MyCustomStorage.prototype._removeFile = function _removeFile (request, file, cb) {
   fs.unlink(file.path, cb)
 }
 
