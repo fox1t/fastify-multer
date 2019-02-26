@@ -67,13 +67,13 @@ server.route({
   url: '/cool-profile',
   preHandler: cpUpload,
   handler: function(request, reply) {
-    // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
+    // request.files is an object (String -> Array) where fieldname is the key, and the value is array of files
     //
     // e.g.
-    //  req.files['avatar'][0] -> File
-    //  req.files['gallery'] -> Array
+    //  request.files['avatar'][0] -> File
+    //  request.files['gallery'] -> Array
     //
-    // req.body will contain the text fields, if there were any
+    // request.body will contain the text fields, if there were any
     reply.code(200).send('SUCCESS')
   }
 })
@@ -92,7 +92,7 @@ server.route({
   url: '/profile',
   preHandler: upload.none(),
   handler: function(request, reply) {
-    // req.body contains the text fields
+    // request.body contains the text fields
     reply.code(200).send('SUCCESS')
   }
 })
@@ -148,18 +148,18 @@ and `MemoryStorage`; More engines are available from third parties.
 #### `.single(fieldname)`
 
 Accept a single file with the name `fieldname`. The single file will be stored
-in `req.file`.
+in `request.file`.
 
 #### `.array(fieldname[, maxCount])`
 
 Accept an array of files, all with the name `fieldname`. Optionally error out if
 more than `maxCount` files are uploaded. The array of files will be stored in
-`req.files`.
+`request.files`.
 
 #### `.fields(fields)`
 
 Accept a mix of files, specified by `fields`. An object with arrays of files
-will be stored in `req.files`.
+will be stored in `request.files`.
 
 `fields` should be an array of objects with `name` and optionally a `maxCount`.
 Example:
@@ -179,7 +179,7 @@ Accept only text fields. If any file upload is made, error with code
 #### `.any()`
 
 Accepts all files that comes over the wire. An array of files will be stored in
-`req.files`.
+`request.files`.
 
 **WARNING:** Make sure that you always handle the files that a user uploads.
 Never add multer as a global middleware since a malicious user could upload
