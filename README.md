@@ -1,4 +1,4 @@
-# Multer
+# Fastify Multer
 
 This package is a port to Fastify of [express multer](https://github.com/expressjs/multer).
 
