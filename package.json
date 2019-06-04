@@ -57,6 +57,7 @@
   },
   "files": [
     "lib/",
+    "src",
     "typings/"
   ],
   "scripts": {

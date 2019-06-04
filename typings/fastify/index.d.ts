@@ -1,6 +1,6 @@
 import 'fastify'
-import { isMultipart } from '../../lib/lib/content-parser'
-import { File, FilesObject } from '../../lib/interfaces'
+import { isMultipart } from '../../src/lib/content-parser'
+import { File, FilesObject } from '../../src/interfaces'
 
 type FilesInRequest = FilesObject | Partial<File>[]
 
