@@ -20,7 +20,7 @@ const errorMessages: ErrorMessages = {
 
 class MulterError extends Error {
   code: string
-  field: string
+  field: string | undefined = undefined
 
   constructor(code: keyof ErrorMessages, field?: string) {
     super()

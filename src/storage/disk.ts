@@ -67,7 +67,11 @@ class DiskStorage implements StorageEngine {
     })
   }
 
-  _removeFile(req: FastifyRequest<IncomingMessage>, file: File, cb: (error?: Error) => void): void {
+  _removeFile(
+    req: FastifyRequest<IncomingMessage>,
+    file: File,
+    cb: (error?: Error | null) => void,
+  ): void {
     const path = file.path!
 
     delete file.destination

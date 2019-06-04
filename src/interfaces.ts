@@ -78,12 +78,12 @@ export interface StorageEngine {
   _handleFile(
     req: FastifyRequest<IncomingMessage>,
     file: File,
-    callback: (error: Error | null, info?: Partial<File>) => void,
+    callback: (error?: Error | null, info?: Partial<File>) => void,
   ): void
   _removeFile(
     req: FastifyRequest<IncomingMessage>,
     file: File,
-    callback: (error?: Error) => void,
+    callback: (error?: Error | null) => void,
   ): void
 }
 

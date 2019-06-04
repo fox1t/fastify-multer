@@ -9,7 +9,7 @@ export interface ErrorMessages {
 }
 declare class MulterError extends Error {
     code: string;
-    field: string;
+    field: string | undefined;
     constructor(code: keyof ErrorMessages, field?: string);
 }
 export default MulterError;

@@ -86,7 +86,7 @@ function makePreHandler(setup: Setup) {
       errorOccured = true
 
       pendingWrites.onceZero(function() {
-        function remove(file: File, cb: (error?: Error) => void) {
+        function remove(file: File, cb: (error?: Error | null) => void) {
           storage._removeFile(request, file, cb)
         }
 
@@ -150,7 +150,7 @@ function makePreHandler(setup: Setup) {
 
       const placeholder = appender.insertPlaceholder(file)
 
-      fileFilter(request, file, function(err: UploadError, includeFile?: boolean) {
+      fileFilter(request, file, function(err: UploadError | null, includeFile?: boolean) {
         if (err) {
           appender.removePlaceholder(placeholder)
           return abortWithError(err)
@@ -180,7 +180,7 @@ function makePreHandler(setup: Setup) {
           abortWithCode('LIMIT_FILE_SIZE', fieldname)
         })
 
-        storage._handleFile(request, file, function(error: Error | null, info: Partial<File>) {
+        storage._handleFile(request, file, function(error?: Error | null, info?: Partial<File>) {
           if (aborting) {
             appender.removePlaceholder(placeholder)
             uploadedFiles.push(extend(file, info))

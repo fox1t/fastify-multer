@@ -1,6 +1,6 @@
 import { IncomingMessage } from 'http'
 import fp, { PluginOptions, nextCallback } from 'fastify-plugin'
-import { FastifyInstance } from 'fastify'
+import { FastifyInstance, FastifyRequest } from 'fastify'
 
 const kMultipart = Symbol('multipart')
 
@@ -10,7 +10,7 @@ function setMultipart(req: IncomingMessage, done: (err: Error | null) => void) {
   done(null)
 }
 
-export function isMultipart(): boolean {
+export function isMultipart(this: FastifyRequest<IncomingMessage>): boolean {
   return this.req[kMultipart] || false
 }
 
