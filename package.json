@@ -1,7 +1,7 @@
 {
   "name": "fastify-multer",
   "description": "Middleware for handling `multipart/form-data` with Fastify.",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "main": "lib/",
   "contributors": [
     "Maksim Sinik <maksim@sinik.it>",
