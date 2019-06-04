@@ -39,7 +39,7 @@ export interface Options {
     fileFilter?: FileFilter;
 }
 export interface StorageEngine {
-    _handleFile(req: FastifyRequest<IncomingMessage>, file: File, callback: (error: Error | null, info?: Partial<File>) => void): void;
+    _handleFile(req: FastifyRequest<IncomingMessage>, file: File, callback: (error?: Error | null, info?: Partial<File>) => void): void;
     _removeFile(req: FastifyRequest<IncomingMessage>, file: File, callback: (error?: Error | null) => void): void;
 }
 export declare type GetFileName = (req: FastifyRequest<IncomingMessage>, file: File, callback: (error: Error | null, filename?: string) => void) => void;

@@ -55,7 +55,8 @@
     "node": ">= 6.0.0"
   },
   "files": [
-    "lib/"
+    "lib/",
+    "typings/"
   ],
   "scripts": {
     "prebuild": "npm run clean-build && npm run lint",
