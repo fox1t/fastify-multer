@@ -1,7 +1,7 @@
 {
   "name": "fastify-multer",
   "description": "Middleware for handling `multipart/form-data` with Fastify.",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "main": "lib/",
   "types": "lib/",
   "contributors": [
@@ -22,7 +22,6 @@
     "middleware"
   ],
   "dependencies": {
-    "@types/mocha": "~5.2.7",
     "append-field": "^1.0.0",
     "busboy": "~0.3.1",
     "concat-stream": "^2.0.0",
@@ -36,6 +35,7 @@
     "@types/busboy": "^0.2.3",
     "@types/concat-stream": "^1.6.0",
     "@types/mkdirp": "^0.5.2",
+    "@types/mocha": "~5.2.7",
     "@types/node": "~12.0.4",
     "@types/on-finished": "^2.3.1",
     "@types/type-is": "^1.6.2",
