@@ -1,6 +1,5 @@
-import { IncomingMessage, ServerResponse } from 'http'
-import { FastifyReply } from 'fastify'
-import { ExtendedFastifyRequest } from './file-appender'
+import { ServerResponse } from 'http'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import is from 'type-is'
 import Busboy from 'busboy'
 import extend from 'xtend'
@@ -21,8 +20,8 @@ function drainStream(stream: NodeJS.ReadableStream) {
 
 function makePreHandler(setup: Setup) {
   return function multerPreHandler(
-    request: ExtendedFastifyRequest<IncomingMessage>,
-    reply: FastifyReply<ServerResponse>,
+    request: FastifyRequest,
+    _: FastifyReply<ServerResponse>,
     next: (err?: Error) => void,
   ) {
     if (!is(request.req, ['multipart'])) {

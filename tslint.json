@@ -39,7 +39,6 @@
     "no-shadowed-variable": true,
     "no-unused-expression": true,
     "triple-equals": true,
-    "no-use-before-declare": true,
     "jsdoc-format": true,
     "semicolon": [
       false,

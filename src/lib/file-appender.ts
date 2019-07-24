@@ -1,9 +1,5 @@
-import { IncomingMessage } from 'http'
 import { FastifyRequest } from 'fastify'
-import { File, FilesObject } from '../interfaces'
-import { isMultipart } from './content-parser'
-
-type FilesInRequest = FilesObject | Partial<File>[]
+import { File } from '../interfaces'
 
 export type Strategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT'
 type Placeholder = {
@@ -16,17 +12,12 @@ function arrayRemove(arr: any[], item: Placeholder) {
     arr.splice(idx, 1)
   }
 }
-export interface ExtendedFastifyRequest<T> extends FastifyRequest<T> {
-  isMultipart: typeof isMultipart
-  file: File
-  files: FilesInRequest
-}
 
 class FileAppender {
   strategy: Strategy
-  request: ExtendedFastifyRequest<IncomingMessage>
+  request: FastifyRequest
 
-  constructor(strategy: Strategy, request: ExtendedFastifyRequest<IncomingMessage>) {
+  constructor(strategy: Strategy, request: FastifyRequest) {
     this.strategy = strategy
     this.request = request
 
@@ -59,10 +50,10 @@ class FileAppender {
         ;(this.request.files as Partial<File>[]).push(placeholder)
         break
       case 'OBJECT':
-        if ((this.request.files as FilesObject)[file.fieldname]) {
-          ;(this.request.files as FilesObject)[file.fieldname].push(placeholder)
+        if (this.request.files[file.fieldname]) {
+          this.request.files[file.fieldname].push(placeholder)
         } else {
-          ;(this.request.files as FilesObject)[file.fieldname] = [placeholder]
+          this.request.files[file.fieldname] = [placeholder]
         }
         break
     }
@@ -79,10 +70,10 @@ class FileAppender {
         arrayRemove(this.request.files as Partial<File>[], placeholder)
         break
       case 'OBJECT':
-        if ((this.request.files as FilesObject)[placeholder.fieldname].length === 1) {
-          delete (this.request.files as FilesObject)[placeholder.fieldname]
+        if (this.request.files[placeholder.fieldname].length === 1) {
+          delete this.request.files[placeholder.fieldname]
         } else {
-          arrayRemove((this.request.files as FilesObject)[placeholder.fieldname], placeholder)
+          arrayRemove(this.request.files[placeholder.fieldname], placeholder)
         }
         break
     }
