@@ -1,6 +1,6 @@
 import { IncomingMessage } from 'http'
 import { FastifyRequest } from 'fastify'
-import concat from 'concat-stream'
+import concat = require('concat-stream')
 
 import { StorageEngine, File } from '../interfaces'
 

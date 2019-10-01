@@ -1,5 +1,6 @@
 import { IncomingMessage } from 'http'
-import fp, { PluginOptions, nextCallback } from 'fastify-plugin'
+import * as fp from 'fastify-plugin'
+import { PluginOptions, nextCallback } from 'fastify-plugin'
 import { FastifyInstance, FastifyRequest } from 'fastify'
 
 const kMultipart = Symbol('multipart')

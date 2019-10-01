@@ -12,7 +12,7 @@
     "emitDecoratorMetadata": true,
     "strict": true,
     "noImplicitAny": false,
-    "esModuleInterop": true,
+    "esModuleInterop": false,
     "removeComments": true,
     "noUnusedLocals": true,
     "lib": [

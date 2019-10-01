@@ -1,10 +1,10 @@
 import { IncomingMessage } from 'http'
 import { FastifyRequest } from 'fastify'
 import { createWriteStream, unlink } from 'fs'
-import os from 'os'
+import * as os from 'os'
 import { join } from 'path'
-import crypto from 'crypto'
-import mkdirp from 'mkdirp'
+import * as crypto from 'crypto'
+import * as mkdirp from 'mkdirp'
 
 import { GetFileName, GetDestination, DiskStorageOptions, File, StorageEngine } from '../interfaces'
 
