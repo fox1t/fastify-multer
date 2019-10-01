@@ -5,6 +5,7 @@ import multer from '../lib'
 import temp from 'fs-temp'
 import rimraf from 'rimraf'
 import FormData from 'form-data'
+import os from 'os'
 
 function generateFilename(req, f, cb) {
   cb(null, f.fieldname + f.originalname)
@@ -56,7 +57,7 @@ describe('Functionality', function() {
       submitForm(parser, env.form, function(error, req) {
         assert.ifError(error)
         assert.ok(startsWith(req.file.path, env.uploadDir))
-        assert.equal(fileSize(req.file.path), 1778)
+        assert.equal(fileSize(req.file.path), os.platform() === 'win32' ? 1803 : 1778)
         done()
       })
     })
@@ -141,8 +142,13 @@ describe('Functionality', function() {
     submitForm(parser, form, function(err, req) {
       assert.ifError(err)
       assert.equal(req.files.length, 2)
-      assert.ok(req.files[0].path.indexOf('/testforme-') >= 0)
-      assert.ok(req.files[1].path.indexOf('/testforme-') >= 0)
+      console.log('################################################# ', req.files[0].path)
+      assert.ok(
+        req.files[0].path.indexOf(os.platform() === 'win32' ? '\\testforme-' : '/testforme-') >= 0,
+      )
+      assert.ok(
+        req.files[1].path.indexOf(os.platform() === 'win32' ? '\\testforme-' : '/testforme-') >= 0,
+      )
       done()
     })
   })
