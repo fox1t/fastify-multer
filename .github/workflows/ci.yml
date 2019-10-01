@@ -22,3 +22,9 @@ jobs:
       - name: Install
         run: |
           npm install
+      - name: Check licenses
+        run: |
+          npm run license-checker
+      - name: Run tests
+        run: |
+          npm run test
