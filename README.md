@@ -1,6 +1,6 @@
 # Fastify Multer
 
-[![NPM Version](https://badgen.net/npm/v/fastify-multer)](https://www.npmjs.com/package/fastify-multer) ![npm download](https://img.shields.io/npm/dt/fastify-multer) ![GitHub CI](https://github.com/fox1t/multer/workflows/ci/badge.svg) ![GitHub Package](https://github.com/fox1t/multer/workflows/package-manager-ci/badge.svg) ![node](https://img.shields.io/node/v/fastify-multer) ![David](https://img.shields.io/david/fox1t/multer) ![GitHub last commit](https://img.shields.io/github/last-commit/fox1t/multer) ![GitHub](https://img.shields.io/github/license/fox1t/multer)
+[![NPM Version](https://badgen.net/npm/v/fastify-multer)](https://www.npmjs.com/package/fastify-multer) ![GitHub CI](https://github.com/fox1t/multer/workflows/ci/badge.svg) ![npm download](https://img.shields.io/npm/dt/fastify-multer) ![David](https://img.shields.io/david/fox1t/multer) ![GitHub last commit](https://img.shields.io/github/last-commit/fox1t/multer) ![GitHub](https://img.shields.io/github/license/fox1t/multer)
 
 This package is a port to Fastify of [express multer](https://github.com/expressjs/multer).
 
