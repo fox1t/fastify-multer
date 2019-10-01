@@ -1,4 +1,6 @@
-declare module 'append-field' {
-  function appendFile(store: any, key: string, value: string): void
-  export = appendFile
-}
+declare var appendField: {
+  appendFile(store: any, key: string, value: string): void;
+};
+
+
+export = appendField;

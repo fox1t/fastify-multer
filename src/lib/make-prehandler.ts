@@ -1,9 +1,9 @@
 import { ServerResponse } from 'http'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import is from 'type-is'
-import Busboy from 'busboy'
-import extend from 'xtend'
-import onFinished from 'on-finished'
+import * as is from 'type-is'
+import * as Busboy from 'busboy'
+import * as extend from 'xtend'
+import * as onFinished from 'on-finished'
 import appendField from 'append-field'
 
 import Counter from './counter'
