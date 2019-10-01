@@ -4,7 +4,7 @@ import { Server, IncomingMessage, ServerResponse } from 'http'
 import { FastifyMiddleware } from 'fastify'
 
 import { submitForm } from './_util'
-import multer from '../src'
+import multer from '../lib'
 import FormData from 'form-data'
 import testData from 'testdata-w3c-json-form'
 

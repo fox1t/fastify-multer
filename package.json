@@ -29,28 +29,28 @@
     "mkdirp": "^0.5.1",
     "on-finished": "^2.3.0",
     "type-is": "~1.6.18",
-    "xtend": "^4.0.1"
+    "xtend": "^4.0.2"
   },
   "devDependencies": {
     "@types/busboy": "^0.2.3",
     "@types/concat-stream": "^1.6.0",
     "@types/mkdirp": "^0.5.2",
     "@types/mocha": "~5.2.7",
-    "@types/node": "~12.6.8",
+    "@types/node": "^12.7.8",
     "@types/on-finished": "^2.3.1",
-    "@types/type-is": "^1.6.2",
+    "@types/type-is": "^1.6.3",
     "@types/xtend": "^4.0.2",
-    "fastify": "~2.6.0",
-    "form-data": "~2.5.0",
+    "fastify": "^2.9.0",
+    "form-data": "^2.5.1",
     "fs-temp": "^1.1.2",
-    "mocha": "~6.2.0",
+    "mocha": "^6.2.1",
     "prettier": "~1.18.2",
-    "rimraf": "^2.6.3",
+    "rimraf": "^3.0.0",
     "testdata-w3c-json-form": "~1.0.0",
-    "ts-node": "~8.3.0",
-    "tslint": "~5.18.0",
+    "ts-node": "^8.4.1",
+    "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "~3.5.1"
+    "typescript": "^3.6.3"
   },
   "engines": {
     "node": ">= 6.0.0"
@@ -69,6 +69,6 @@
     "lint": "tslint --fix -c tslint.json -t stylish -p ./tsconfig.json",
     "update": "npx npm-check -u",
     "prepublishOnly": "npm run build",
-    "test": "mocha --require test/tshook.js ./test/*.ts"
+    "test": "npm run build && mocha --require test/tshook.js ./test/*.ts"
   }
 }

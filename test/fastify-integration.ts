@@ -1,6 +1,6 @@
 import assert from 'assert'
 
-import multer from '../src'
+import multer from '../lib'
 import { file } from './_util'
 import { AddressInfo } from 'net'
 

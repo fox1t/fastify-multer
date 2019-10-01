@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import path from 'path'
 import { file, fileSize, submitForm } from './_util'
-import multer from '../src'
+import multer from '../lib'
 import temp from 'fs-temp'
 import rimraf from 'rimraf'
 import FormData from 'form-data'

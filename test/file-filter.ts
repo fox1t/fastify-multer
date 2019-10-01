@@ -1,7 +1,7 @@
 import assert from 'assert'
 
 import { submitForm, file } from './_util'
-import multer from '../src'
+import multer from '../lib'
 import FormData from 'form-data'
 
 function withFilter(fileFilter) {

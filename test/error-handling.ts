@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import os from 'os'
 import { file, submitForm } from './_util'
-import multer from '../src'
+import multer from '../lib'
 import stream from 'stream'
 import FormData from 'form-data'
 

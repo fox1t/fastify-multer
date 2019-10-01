@@ -4,7 +4,7 @@ import * as is from 'type-is'
 import * as Busboy from 'busboy'
 import * as extend from 'xtend'
 import * as onFinished from 'on-finished'
-import appendField from 'append-field'
+import * as appendField from 'append-field'
 
 import Counter from './counter'
 import MulterError, { ErrorMessages } from './multer-error'

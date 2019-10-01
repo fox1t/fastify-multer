@@ -1,7 +1,7 @@
 import assert from 'assert'
 
 import { file, submitForm } from './_util'
-import multer from '../src'
+import multer from '../lib'
 import FormData from 'form-data'
 
 describe('Reuse Middleware', function() {
