@@ -6,7 +6,6 @@ import multer from '../lib'
 import temp from 'fs-temp'
 import rimraf from 'rimraf'
 import FormData from 'form-data'
-import os from 'os'
 
 describe('Unicode', function() {
   let uploadDir, upload
@@ -48,8 +47,7 @@ describe('Unicode', function() {
       assert.equal(req.file.originalname, filename)
 
       assert.equal(req.file.fieldname, 'small0')
-      assert.equal(req.file.size, os.platform() === 'win32' ? 1803 : 1778)
-      assert.equal(fileSize(req.file.path), os.platform() === 'win32' ? 1803 : 1778)
+      assert.equal(req.file.size, fileSize(req.file.path))
 
       done()
     })

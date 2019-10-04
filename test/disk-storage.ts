@@ -7,7 +7,6 @@ import multer from '../lib'
 import temp from 'fs-temp'
 import rimraf from 'rimraf'
 import FormData from 'form-data'
-import os from 'os'
 
 describe('Disk Storage', function() {
   let uploadDir, upload
@@ -42,9 +41,7 @@ describe('Disk Storage', function() {
 
       assert.equal(req.file.fieldname, 'small0')
       assert.equal(req.file.originalname, 'small0.dat')
-      assert.equal(req.file.size, os.platform() === 'win32' ? 1803 : 1778)
-      assert.equal(fileSize(req.file.path), os.platform() === 'win32' ? 1803 : 1778)
-
+      assert.equal(req.file.size, fileSize(req.file.path))
       done()
     })
   })
@@ -116,8 +113,7 @@ describe('Disk Storage', function() {
 
       assert.equal(req.files['tiny0'][0].fieldname, 'tiny0')
       assert.equal(req.files['tiny0'][0].originalname, 'tiny0.dat')
-      assert.equal(req.files['tiny0'][0].size, os.platform() === 'win32' ? 128 : 122)
-      assert.equal(fileSize(req.files['tiny0'][0].path), os.platform() === 'win32' ? 128 : 122)
+      assert.equal(req.files['tiny0'][0].size, fileSize(req.files['tiny0'][0].path))
 
       assert.equal(req.files['tiny1'][0].fieldname, 'tiny1')
       assert.equal(req.files['tiny1'][0].originalname, 'tiny1.dat')
@@ -126,18 +122,15 @@ describe('Disk Storage', function() {
 
       assert.equal(req.files['small0'][0].fieldname, 'small0')
       assert.equal(req.files['small0'][0].originalname, 'small0.dat')
-      assert.equal(req.files['small0'][0].size, os.platform() === 'win32' ? 1803 : 1778)
-      assert.equal(fileSize(req.files['small0'][0].path), os.platform() === 'win32' ? 1803 : 1778)
+      assert.equal(req.files['small0'][0].size, fileSize(req.files['small0'][0].path))
 
       assert.equal(req.files['small1'][0].fieldname, 'small1')
       assert.equal(req.files['small1'][0].originalname, 'small1.dat')
-      assert.equal(req.files['small1'][0].size, os.platform() === 'win32' ? 329 : 315)
-      assert.equal(fileSize(req.files['small1'][0].path), os.platform() === 'win32' ? 329 : 315)
+      assert.equal(req.files['small1'][0].size, fileSize(req.files['small1'][0].path))
 
       assert.equal(req.files['medium'][0].fieldname, 'medium')
       assert.equal(req.files['medium'][0].originalname, 'medium.dat')
-      assert.equal(req.files['medium'][0].size, os.platform() === 'win32' ? 13386 : 13196)
-      assert.equal(fileSize(req.files['medium'][0].path), os.platform() === 'win32' ? 13386 : 13196)
+      assert.equal(req.files['medium'][0].size, fileSize(req.files['medium'][0].path))
 
       assert.equal(req.files['large'][0].fieldname, 'large')
       assert.equal(req.files['large'][0].originalname, 'large.jpg')

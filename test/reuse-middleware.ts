@@ -1,9 +1,9 @@
 import assert from 'assert'
 
-import { file, submitForm } from './_util'
+import { file, submitForm, fileSize } from './_util'
 import multer from '../lib'
 import FormData from 'form-data'
-import os from 'os'
+import path from 'path'
 
 describe('Reuse Middleware', function() {
   let parser
@@ -36,8 +36,11 @@ describe('Reuse Middleware', function() {
         req.files.forEach(function(f) {
           assert.equal(f.fieldname, 'them-files')
           assert.equal(f.originalname, 'small0.dat')
-          assert.equal(f.size, os.platform() === 'win32' ? 1803 : 1778)
-          assert.equal(f.buffer.length, os.platform() === 'win32' ? 1803 : 1778)
+          assert.equal(f.size, fileSize(path.resolve(__dirname, `./files/${f.originalname}`)))
+          assert.equal(
+            f.buffer.length,
+            fileSize(path.resolve(__dirname, `./files/${f.originalname}`)),
+          )
         })
 
         if (--pending === 0) {

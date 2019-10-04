@@ -5,7 +5,6 @@ import multer from '../lib'
 import temp from 'fs-temp'
 import rimraf from 'rimraf'
 import FormData from 'form-data'
-import os from 'os'
 import path from 'path'
 
 function generateFilename(req, f, cb) {
@@ -58,7 +57,7 @@ describe('Functionality', function() {
       submitForm(parser, env.form, function(error, req) {
         assert.ifError(error)
         assert.ok(startsWith(req.file.path, env.uploadDir))
-        assert.equal(fileSize(req.file.path), os.platform() === 'win32' ? 1803 : 1778)
+        assert.equal(req.file.size, fileSize(req.file.path))
         done()
       })
     })
