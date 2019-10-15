@@ -1,5 +1,5 @@
 import { IncomingMessage } from 'http'
-import * as fp from 'fastify-plugin'
+import fp = require('fastify-plugin')
 import { PluginOptions, nextCallback } from 'fastify-plugin'
 import { FastifyInstance, FastifyRequest } from 'fastify'
 
@@ -22,7 +22,9 @@ function fastifyMulter(fastify: FastifyInstance, options: PluginOptions, next: n
   next()
 }
 
-export default fp(fastifyMulter, {
+const multer = fp(fastifyMulter, {
   fastify: '>= 2.0.0',
   name: 'fastify-multer',
 })
+
+export default multer
