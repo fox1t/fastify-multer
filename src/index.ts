@@ -140,4 +140,4 @@ multer.memoryStorage = memoryStorage
 multer.MulterError = MulterError
 multer.default = multer
 
-export default multer as MulterFactory
+export = multer as MulterFactory
