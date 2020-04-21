@@ -12,7 +12,7 @@ function setMultipart(req: IncomingMessage, done: (err: Error | null) => void) {
 }
 
 export function isMultipart(this: FastifyRequest<IncomingMessage>): boolean {
-  return this.req[kMultipart] || false
+  return (this.req as any)[kMultipart] || false
 }
 
 function fastifyMulter(fastify: FastifyInstance, options: PluginOptions, next: nextCallback) {
