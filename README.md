@@ -51,6 +51,17 @@ server.route({
   }
 })
 
+// or using the short hand declaration
+server.post(
+  '/profile',
+  { preHandler: upload.single('avatar') },
+  function(request, reply) {
+    // request.file is the `avatar` file
+    // request.body will hold the text fields, if there were any
+    reply.code(200).send('SUCCESS')
+  }
+)
+
 server.route({
   method: 'POST',
   url: '/photos/upload',

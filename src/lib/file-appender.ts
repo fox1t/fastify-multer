@@ -1,5 +1,5 @@
 import { FastifyRequest } from 'fastify'
-import { File } from '../interfaces'
+import { File, FilesObject } from '../interfaces'
 
 export type Strategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT'
 type Placeholder = {
@@ -50,10 +50,10 @@ class FileAppender {
         ;(this.request.files as Partial<File>[]).push(placeholder)
         break
       case 'OBJECT':
-        if (this.request.files[file.fieldname]) {
-          this.request.files[file.fieldname].push(placeholder)
+        if ((this.request.files as FilesObject)[file.fieldname]) {
+          ;(this.request.files as FilesObject)[file.fieldname].push(placeholder)
         } else {
-          this.request.files[file.fieldname] = [placeholder]
+          ;(this.request.files as FilesObject)[file.fieldname] = [placeholder]
         }
         break
     }
@@ -70,10 +70,10 @@ class FileAppender {
         arrayRemove(this.request.files as Partial<File>[], placeholder)
         break
       case 'OBJECT':
-        if (this.request.files[placeholder.fieldname].length === 1) {
-          delete this.request.files[placeholder.fieldname]
+        if ((this.request.files as FilesObject)[placeholder.fieldname].length === 1) {
+          delete (this.request.files as FilesObject)[placeholder.fieldname]
         } else {
-          arrayRemove(this.request.files[placeholder.fieldname], placeholder)
+          arrayRemove((this.request.files as FilesObject)[placeholder.fieldname], placeholder)
         }
         break
     }
