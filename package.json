@@ -11,7 +11,7 @@
     "Linus Unnebäck <linus@folkdatorn.se>"
   ],
   "license": "MIT",
-  "repository": "https://github.com/fox1t/multer",
+  "repository": "https://github.com/fox1t/fastify-multer",
   "keywords": [
     "form",
     "post",
