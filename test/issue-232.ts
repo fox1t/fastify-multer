@@ -31,7 +31,7 @@ describe('Issue #232', function() {
 
     form.append('file', file('large.jpg'))
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.ok(err, 'an error was given')
 
       assert.equal(err.code, 'LIMIT_FILE_SIZE')

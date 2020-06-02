@@ -148,7 +148,7 @@ describe('Disk Storage', function() {
     form.append('tiny0', file('tiny0.dat'))
     form.append('small0', file('small0.dat'))
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
       assert.equal(err.field, 'small0')
       assert.deepEqual(err.storageErrors, [])
@@ -162,7 +162,7 @@ describe('Disk Storage', function() {
 
   it("should report error when directory doesn't exist", function(done) {
     const directory = path.join(temp.mkdirSync(), 'ghost')
-    function dest($0, $1, cb) {
+    function dest(_$0, _$1, cb) {
       cb(null, directory)
     }
 
@@ -173,7 +173,7 @@ describe('Disk Storage', function() {
 
     form.append('tiny0', file('tiny0.dat'))
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'ENOENT')
       assert.equal(path.dirname(err.path), directory)
 

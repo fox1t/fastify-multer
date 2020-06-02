@@ -7,7 +7,7 @@ import rimraf from 'rimraf'
 import FormData from 'form-data'
 import path from 'path'
 
-function generateFilename(req, f, cb) {
+function generateFilename(_req, f, cb) {
   cb(null, f.fieldname + f.originalname)
 }
 
@@ -119,14 +119,14 @@ describe('Functionality', function() {
 
   it('should rename the destination directory to a different directory', function(done) {
     const storage = multer.diskStorage({
-      destination: function(req, f, cb) {
+      destination: function(_req, _f, cb) {
         temp.template('testforme-%s').mkdir(function(err, uploadDir) {
           if (err) {
             return cb(err, '')
           }
 
           cleanup.push(uploadDir)
-          cb(null, uploadDir)
+          cb(null, uploadDir as string)
         })
       },
       filename: generateFilename,

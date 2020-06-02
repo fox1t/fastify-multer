@@ -18,7 +18,7 @@ describe('Unicode', function() {
 
       const storage = multer.diskStorage({
         destination: p,
-        filename: function(req, f, cb) {
+        filename: function(_req, f, cb) {
           cb(null, f.originalname)
         },
       })

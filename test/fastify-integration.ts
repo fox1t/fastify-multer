@@ -39,7 +39,7 @@ describe('Fastify Integration', function() {
 
     fastify.register(multer.contentParser)
 
-    fastify.setErrorHandler(function(error: any, request, reply) {
+    fastify.setErrorHandler(function(error: any, _request, reply) {
       assert.equal(error.code, 'LIMIT_FILE_SIZE')
 
       errorCalled++
@@ -50,7 +50,7 @@ describe('Fastify Integration', function() {
       method: 'POST',
       url: '/t1/profile',
       preHandler: upload.single('avatar'),
-      handler: function(request, reply) {
+      handler: function(_request, reply) {
         routeCalled++
         reply.code(200).send('SUCCESS')
       },
@@ -75,7 +75,7 @@ describe('Fastify Integration', function() {
   })
 
   it('should work when receiving error from fileFilter', function(done) {
-    function fileFilter(req, _, cb) {
+    function fileFilter(_req, _, cb) {
       cb(new Error('TEST'))
     }
 
@@ -90,7 +90,7 @@ describe('Fastify Integration', function() {
 
     fastify.register(multer.contentParser)
 
-    fastify.setErrorHandler(function(error, request, reply) {
+    fastify.setErrorHandler(function(error, _request, reply) {
       assert.equal(error.message, 'TEST')
 
       errorCalled++
@@ -101,7 +101,7 @@ describe('Fastify Integration', function() {
       method: 'POST',
       url: '/t2/profile',
       preHandler: upload.single('avatar'),
-      handler: function(request, reply) {
+      handler: function(_request, reply) {
         routeCalled++
         reply.code(200).send('SUCCESS')
       },
