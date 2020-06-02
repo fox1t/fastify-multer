@@ -15,7 +15,7 @@ export function isMultipart(this: FastifyRequest<IncomingMessage>): boolean {
   return (this.req as any)[kMultipart] || false
 }
 
-function fastifyMulter(fastify: FastifyInstance, options: PluginOptions, next: nextCallback) {
+function fastifyMulter(fastify: FastifyInstance, _options: PluginOptions, next: nextCallback) {
   fastify.addContentTypeParser('multipart', setMultipart)
   fastify.decorateRequest('isMultipart', isMultipart)
 

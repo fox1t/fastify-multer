@@ -8,13 +8,13 @@ import * as mkdirp from 'mkdirp'
 
 import { GetFileName, GetDestination, DiskStorageOptions, File, StorageEngine } from '../interfaces'
 
-const getFilename: GetFileName = (req, file, cb) => {
+const getFilename: GetFileName = (_req, _file, cb) => {
   crypto.randomBytes(16, function(err, raw) {
     cb(err, err ? undefined : raw.toString('hex'))
   })
 }
 
-const getDestination: GetDestination = (req, file, cb) => {
+const getDestination: GetDestination = (_req, _file, cb) => {
   cb(null, os.tmpdir())
 }
 
@@ -27,7 +27,7 @@ class DiskStorage implements StorageEngine {
 
     if (typeof opts.destination === 'string') {
       mkdirp.sync(opts.destination)
-      this.getDestination = function($0, $1, cb) {
+      this.getDestination = function(_$0, _$1, cb) {
         cb(null, opts.destination as string)
       }
     } else {
@@ -68,7 +68,7 @@ class DiskStorage implements StorageEngine {
   }
 
   _removeFile(
-    req: FastifyRequest<IncomingMessage>,
+    _req: FastifyRequest<IncomingMessage>,
     file: File,
     cb: (error?: Error | null) => void,
   ): void {

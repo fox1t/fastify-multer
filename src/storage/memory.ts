@@ -6,7 +6,7 @@ import { StorageEngine, File } from '../interfaces'
 
 class MemoryStorage implements StorageEngine {
   _handleFile(
-    req: FastifyRequest<IncomingMessage>,
+    _req: FastifyRequest<IncomingMessage>,
     file: File,
     cb: (error: Error | null, info?: Partial<File>) => void,
   ): void {
@@ -20,7 +20,7 @@ class MemoryStorage implements StorageEngine {
     )
   }
 
-  _removeFile(req: FastifyRequest<IncomingMessage>, file: File, cb: (error?: Error) => void) {
+  _removeFile(_req: FastifyRequest<IncomingMessage>, file: File, cb: (error?: Error) => void) {
     delete file.buffer
     cb(undefined)
   }
