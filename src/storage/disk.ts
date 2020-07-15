@@ -1,10 +1,9 @@
-import { IncomingMessage } from 'http'
 import { FastifyRequest } from 'fastify'
 import { createWriteStream, unlink } from 'fs'
-import * as os from 'os'
+import os from 'os'
 import { join } from 'path'
-import * as crypto from 'crypto'
-import * as mkdirp from 'mkdirp'
+import crypto from 'crypto'
+import mkdirp from 'mkdirp'
 
 import { GetFileName, GetDestination, DiskStorageOptions, File, StorageEngine } from '../interfaces'
 
@@ -36,7 +35,7 @@ class DiskStorage implements StorageEngine {
   }
 
   _handleFile(
-    req: FastifyRequest<IncomingMessage>,
+    req: FastifyRequest,
     file: File,
     cb: (error: Error | null, info?: Partial<File>) => void,
   ): void {
@@ -67,11 +66,7 @@ class DiskStorage implements StorageEngine {
     })
   }
 
-  _removeFile(
-    req: FastifyRequest<IncomingMessage>,
-    file: File,
-    cb: (error?: Error | null) => void,
-  ): void {
+  _removeFile(req: FastifyRequest, file: File, cb: (error?: Error | null) => void): void {
     const path = file.path!
 
     delete file.destination

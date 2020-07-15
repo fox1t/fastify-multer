@@ -9,7 +9,8 @@ import rimraf from 'rimraf'
 import FormData from 'form-data'
 
 describe('Disk Storage', function() {
-  let uploadDir, upload
+  let uploadDir
+  let upload: ReturnType<typeof multer>
 
   beforeEach(function(done) {
     temp.mkdir(function(err, p) {

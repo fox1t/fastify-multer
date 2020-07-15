@@ -5,7 +5,7 @@ import { File, FilesObject } from '../../src/interfaces'
 type FilesInRequest = FilesObject | Partial<File>[]
 
 declare module 'fastify' {
-  interface FastifyRequest<HttpRequest, Query, Params, Headers, Body> {
+  interface FastifyRequest {
     isMultipart: typeof isMultipart
     file: File
     files: FilesInRequest

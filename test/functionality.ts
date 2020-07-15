@@ -126,7 +126,7 @@ describe('Functionality', function() {
           }
 
           cleanup.push(uploadDir)
-          cb(null, uploadDir)
+          cb(null, uploadDir!)
         })
       },
       filename: generateFilename,

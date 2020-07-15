@@ -1,10 +1,9 @@
-import { ServerResponse } from 'http'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import * as is from 'type-is'
-import * as Busboy from 'busboy'
-import * as extend from 'xtend'
-import * as onFinished from 'on-finished'
-import * as appendField from 'append-field'
+import is from 'type-is'
+import Busboy from 'busboy'
+import extend from 'xtend'
+import onFinished from 'on-finished'
+import appendField from 'append-field'
 
 import Counter from './counter'
 import MulterError, { ErrorMessages } from './multer-error'
@@ -21,10 +20,12 @@ function drainStream(stream: NodeJS.ReadableStream) {
 function makePreHandler(setup: Setup) {
   return function multerPreHandler(
     request: FastifyRequest,
-    _: FastifyReply<ServerResponse>,
+    _: FastifyReply,
     next: (err?: Error) => void,
   ) {
-    if (!is(request.req, ['multipart'])) {
+    const rawRequest = request.raw || (request as any).req // this is needed just for testing
+
+    if (!is(rawRequest, ['multipart'])) {
       return next()
     }
 
@@ -42,7 +43,7 @@ function makePreHandler(setup: Setup) {
 
     try {
       busboy = new Busboy({
-        headers: request.req.headers,
+        headers: rawRequest.headers,
         limits: limits,
         preservePath: preservePath,
       })
@@ -63,11 +64,11 @@ function makePreHandler(setup: Setup) {
       }
       isDone = true
 
-      request.req.unpipe(busboy)
-      drainStream(request.req)
+      rawRequest.unpipe(busboy)
+      drainStream(rawRequest)
       busboy.removeAllListeners()
 
-      onFinished(request.req, function() {
+      onFinished(rawRequest, function() {
         next(err)
       })
     }
@@ -219,7 +220,7 @@ function makePreHandler(setup: Setup) {
       indicateDone()
     })
 
-    request.req.pipe(busboy)
+    rawRequest.pipe(busboy)
   }
 }
 

@@ -1,7 +1,6 @@
 import assert from 'assert'
 import stream from 'stream'
-import { Server, IncomingMessage, ServerResponse } from 'http'
-import { FastifyMiddleware } from 'fastify'
+import { preHandlerHookHandler } from 'fastify'
 
 import { submitForm } from './_util'
 import multer from '../lib'
@@ -9,7 +8,7 @@ import FormData from 'form-data'
 import testData from 'testdata-w3c-json-form'
 
 describe('Fields', function() {
-  let parser: FastifyMiddleware<Server, IncomingMessage, ServerResponse>
+  let parser: preHandlerHookHandler
 
   before(function() {
     parser = multer().fields([])

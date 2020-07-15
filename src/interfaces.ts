@@ -1,4 +1,3 @@
-import { IncomingMessage } from 'http'
 import { FastifyRequest } from 'fastify'
 import { Strategy } from './lib/file-appender'
 
@@ -37,11 +36,7 @@ export interface File {
 
 export type FileFilterCallback = (error: Error | null, acceptFile?: boolean) => void
 
-export type FileFilter = (
-  req: FastifyRequest<IncomingMessage>,
-  file: File,
-  callback: FileFilterCallback,
-) => void
+export type FileFilter = (req: FastifyRequest, file: File, callback: FileFilterCallback) => void
 
 export interface Options {
   /** The destination directory for the uploaded files. */
@@ -76,25 +71,21 @@ export interface Options {
 
 export interface StorageEngine {
   _handleFile(
-    req: FastifyRequest<IncomingMessage>,
+    req: FastifyRequest,
     file: File,
     callback: (error?: Error | null, info?: Partial<File>) => void,
   ): void
-  _removeFile(
-    req: FastifyRequest<IncomingMessage>,
-    file: File,
-    callback: (error?: Error | null) => void,
-  ): void
+  _removeFile(req: FastifyRequest, file: File, callback: (error?: Error | null) => void): void
 }
 
 export type GetFileName = (
-  req: FastifyRequest<IncomingMessage>,
+  req: FastifyRequest,
   file: File,
   callback: (error: Error | null, filename?: string) => void,
 ) => void
 
 export type GetDestination = (
-  req: FastifyRequest<IncomingMessage>,
+  req: FastifyRequest,
   file: File,
   callback: (error: Error | null, destination: string) => void,
 ) => void

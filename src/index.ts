@@ -1,5 +1,4 @@
-import { IncomingMessage, Server, ServerResponse } from 'http'
-import { FastifyRequest, FastifyMiddleware } from 'fastify'
+import { FastifyRequest, preHandlerHookHandler } from 'fastify'
 import makePreHandler from './lib/make-prehandler'
 import diskStorage from './storage/disk'
 import memoryStorage from './storage/memory'
@@ -17,7 +16,7 @@ import {
 } from './interfaces'
 import { Strategy } from './lib/file-appender'
 
-function allowAll(req: FastifyRequest<IncomingMessage>, file: File, cb: FileFilterCallback) {
+function allowAll(req: FastifyRequest, file: File, cb: FileFilterCallback) {
   cb(null, true)
 }
 
@@ -56,11 +55,7 @@ class Multer {
         }
       })
 
-      function wrappedFileFilter(
-        req: FastifyRequest<IncomingMessage>,
-        file: File,
-        cb: FileFilterCallback,
-      ) {
+      function wrappedFileFilter(req: FastifyRequest, file: File, cb: FileFilterCallback) {
         if ((filesLeft[file.fieldname] || 0) <= 0) {
           return cb(new MulterError('LIMIT_UNEXPECTED_FILE', file.fieldname))
         }
@@ -81,26 +76,23 @@ class Multer {
     return makePreHandler(setup)
   }
 
-  single(name: string): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
+  single(name: string): preHandlerHookHandler {
     return this._makePreHandler([{ name, maxCount: 1 }], 'VALUE')
   }
 
-  array(
-    name: string,
-    maxCount?: number,
-  ): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
+  array(name: string, maxCount?: number): preHandlerHookHandler {
     return this._makePreHandler([{ name, maxCount }], 'ARRAY')
   }
 
-  fields(fields: Field[]): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
+  fields(fields: Field[]): preHandlerHookHandler {
     return this._makePreHandler(fields, 'OBJECT')
   }
 
-  none(): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
+  none(): preHandlerHookHandler {
     return this._makePreHandler([], 'NONE')
   }
 
-  any(): FastifyMiddleware<Server, IncomingMessage, ServerResponse> {
+  any(): preHandlerHookHandler {
     const setup: Setup = () => ({
       limits: this.limits,
       preservePath: this.preservePath,
