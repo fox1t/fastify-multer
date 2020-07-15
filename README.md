@@ -11,6 +11,9 @@ on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
 
 **NOTE**: Multer will not process any form which is not multipart (`multipart/form-data`).
 
+## Version Note
+**fastify-multer 2.x.x version supports Fastify >= 3.0.0. For Fastify < 3.0.0 use fastify-multer 1.x.x version**
+
 ## Installation
 
 ```sh
