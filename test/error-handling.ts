@@ -179,7 +179,7 @@ describe('Error Handling', function() {
     }
 
     req.end(body)
-    const request = { req }
+    const request = { raw: req }
 
     upload(request, null, function(err) {
       assert.equal(err.message, 'Multipart: Boundary not found')
@@ -207,7 +207,7 @@ describe('Error Handling', function() {
 
     req.end(body)
 
-    upload({ req }, null, function(err) {
+    upload({ raw: req }, null, function(err) {
       assert.equal(err.message, 'Unexpected end of multipart data')
       done()
     })

@@ -23,7 +23,7 @@ function makePreHandler(setup: Setup) {
     _: FastifyReply,
     next: (err?: Error) => void,
   ) {
-    const rawRequest = request.raw || (request as any).req // this is needed just for testing
+    const rawRequest = request.raw
 
     if (!is(rawRequest, ['multipart'])) {
       return next()

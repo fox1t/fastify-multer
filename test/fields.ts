@@ -68,7 +68,7 @@ describe('Fields', function() {
       'content-type': 'application/x-www-form-urlencoded',
       'content-length': 11,
     }
-    ;(parser as any)({ req }, null, function(err) {
+    ;(parser as any)({ raw: req }, null, function(err) {
       assert.ifError(err)
       assert.equal(req.hasOwnProperty('body'), false)
       assert.equal(req.hasOwnProperty('files'), false)
@@ -85,7 +85,7 @@ describe('Fields', function() {
       'content-type': 'application/x-www-form-urlencoded',
       'content-length': 11,
     }
-    ;(parser as any)({ req }, null, function(err) {
+    ;(parser as any)({ raw: req }, null, function(err) {
       assert.ifError(err)
       assert.equal(req.hasOwnProperty('body'), false)
       assert.equal(req.hasOwnProperty('files'), false)

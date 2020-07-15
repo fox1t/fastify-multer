@@ -30,7 +30,7 @@ export function submitForm(multer: any, form: any, cb: any) {
       'content-length': length,
     }
 
-    const request = { req }
+    const request = { raw: req }
     multer(request, null, function(error: Error) {
       onFinished(req as any, function() {
         cb(error, request)
