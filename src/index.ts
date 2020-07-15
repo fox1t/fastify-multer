@@ -16,7 +16,7 @@ import {
 } from './interfaces'
 import { Strategy } from './lib/file-appender'
 
-function allowAll(req: FastifyRequest, file: File, cb: FileFilterCallback) {
+function allowAll(_req: FastifyRequest, _file: File, cb: FileFilterCallback) {
   cb(null, true)
 }
 

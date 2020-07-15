@@ -18,7 +18,7 @@ describe('Expected files', function() {
 
     form.append('notme', file('small0.dat'))
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
       assert.equal(err.field, 'notme')
       done()
@@ -32,7 +32,7 @@ describe('Expected files', function() {
     form.append('notme', file('small0.dat'))
     form.append('notme', file('small1.dat'))
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
       assert.equal(err.field, 'notme')
       done()
@@ -46,7 +46,7 @@ describe('Expected files', function() {
     form.append('butme', file('small0.dat'))
     form.append('butme', file('small1.dat'))
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
       assert.equal(err.field, 'butme')
       done()
@@ -80,7 +80,7 @@ describe('Expected files', function() {
     form.append('andme', file('empty.dat'))
     form.append('notme', file('empty.dat'))
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
       assert.equal(err.field, 'notme')
       done()

@@ -20,7 +20,7 @@ describe('Error Handling', function() {
     form.append('small0', file('small0.dat'))
     form.append('small0', file('small0.dat'))
 
-    submitForm(upload, form, function(err, req) {
+    submitForm(upload, form, function(err, _req) {
       assert.equal(err instanceof Error, true)
       assert.equal(err instanceof multer.MulterError, true)
       done()
@@ -34,7 +34,7 @@ describe('Error Handling', function() {
     form.append('field0', 'BOOM!')
     form.append('small0', file('small0.dat'))
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_PART_COUNT')
       done()
     })
@@ -50,7 +50,7 @@ describe('Error Handling', function() {
     form.append('tiny0', file('tiny0.dat'))
     form.append('small0', file('small0.dat'))
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_FILE_SIZE')
       assert.equal(err.field, 'small0')
       done()
@@ -67,7 +67,7 @@ describe('Error Handling', function() {
     form.append('small0', file('small0.dat'))
     form.append('small1', file('small1.dat'))
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_FILE_COUNT')
       done()
     })
@@ -79,7 +79,7 @@ describe('Error Handling', function() {
 
     form.append('small0', file('small0.dat'))
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_FIELD_KEY')
       done()
     })
@@ -92,7 +92,7 @@ describe('Error Handling', function() {
     form.append('ok', 'SMILE')
     form.append('blowup', 'BOOM!')
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_FIELD_KEY')
       done()
     })
@@ -105,7 +105,7 @@ describe('Error Handling', function() {
     form.append('field0', 'This is okay')
     form.append('field1', 'This will make the parser explode')
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_FIELD_VALUE')
       assert.equal(err.field, 'field1')
       done()
@@ -119,7 +119,7 @@ describe('Error Handling', function() {
     form.append('field0', 'BOOM!')
     form.append('field1', 'BOOM!')
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_FIELD_COUNT')
       done()
     })
@@ -131,7 +131,7 @@ describe('Error Handling', function() {
 
     form.append('small0', file('small0.dat'))
 
-    submitForm(parser, form, function(err, req) {
+    submitForm(parser, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_UNEXPECTED_FILE')
       assert.equal(err.field, 'small0')
       done()
@@ -141,7 +141,7 @@ describe('Error Handling', function() {
   it('should report errors from storage engines', function(done) {
     const storage = multer.memoryStorage()
 
-    storage._removeFile = function _removeFile(req, _, cb) {
+    storage._removeFile = function _removeFile(_req, _res, cb) {
       const err: any = new Error('Test error')
       err.code = 'TEST'
       cb(err)
@@ -223,7 +223,7 @@ describe('Error Handling', function() {
     form.append('small0', file('small0.dat'))
     form.append('small0', file('small0.dat'))
 
-    submitForm(upload, form, function(err, req) {
+    submitForm(upload, form, function(err, _req) {
       assert.equal(err.code, 'LIMIT_FILE_SIZE')
       done()
     })
