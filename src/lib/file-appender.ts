@@ -3,7 +3,7 @@ import { File, FilesObject } from '../interfaces'
 
 export type Strategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT'
 type Placeholder = {
-  fieldname: string
+  fieldname?: string
 }
 
 function arrayRemove(arr: any[], item: Placeholder) {
@@ -70,10 +70,12 @@ class FileAppender {
         arrayRemove(this.request.files as Partial<File>[], placeholder)
         break
       case 'OBJECT':
-        if ((this.request.files as FilesObject)[placeholder.fieldname].length === 1) {
-          delete (this.request.files as FilesObject)[placeholder.fieldname]
-        } else {
-          arrayRemove((this.request.files as FilesObject)[placeholder.fieldname], placeholder)
+        if (placeholder.fieldname) {
+          if ((this.request.files as FilesObject)[placeholder.fieldname].length === 1) {
+            delete (this.request.files as FilesObject)[placeholder.fieldname]
+          } else {
+            arrayRemove((this.request.files as FilesObject)[placeholder.fieldname], placeholder)
+          }
         }
         break
     }
