@@ -70,10 +70,12 @@ class FileAppender {
         arrayRemove(this.request.files as Partial<File>[], placeholder)
         break
       case 'OBJECT':
-        if ((this.request.files as FilesObject)[placeholder.fieldname!].length === 1) {
-          delete (this.request.files as FilesObject)[placeholder.fieldname!]
-        } else {
-          arrayRemove((this.request.files as FilesObject)[placeholder.fieldname!], placeholder)
+        if (placeholder.fieldname) {
+          if ((this.request.files as FilesObject)[placeholder.fieldname].length === 1) {
+            delete (this.request.files as FilesObject)[placeholder.fieldname]
+          } else {
+            arrayRemove((this.request.files as FilesObject)[placeholder.fieldname], placeholder)
+          }
         }
         break
     }
