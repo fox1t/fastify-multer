@@ -49,13 +49,16 @@ class FileAppender {
       case 'ARRAY':
         ;(this.request.files as Partial<File>[]).push(placeholder)
         break
-      case 'OBJECT':
-        if ((this.request.files as FilesObject)[file.fieldname]) {
-          ;(this.request.files as FilesObject)[file.fieldname].push(placeholder)
+      case 'OBJECT': {
+        const files = (this.request.files as FilesObject)[file.fieldname]
+
+        if (files) {
+          files.push(placeholder)
         } else {
           ;(this.request.files as FilesObject)[file.fieldname] = [placeholder]
         }
         break
+      }
     }
 
     return placeholder
@@ -71,10 +74,14 @@ class FileAppender {
         break
       case 'OBJECT':
         if (placeholder.fieldname) {
-          if ((this.request.files as FilesObject)[placeholder.fieldname].length === 1) {
-            delete (this.request.files as FilesObject)[placeholder.fieldname]
-          } else {
-            arrayRemove((this.request.files as FilesObject)[placeholder.fieldname], placeholder)
+          const files = (this.request.files as FilesObject)[placeholder.fieldname]
+
+          if (files) {
+            if (files.length === 1) {
+              delete (this.request.files as FilesObject)[placeholder.fieldname]
+            } else {
+              arrayRemove(files, placeholder)
+            }
           }
         }
         break
