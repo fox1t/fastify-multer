@@ -48,7 +48,7 @@ function makePreHandler(setup: Setup) {
         preservePath: preservePath,
       })
     } catch (err) {
-      return next(err)
+      return next(err as Error)
     }
 
     const appender = new FileAppender(fileStrategy, request)

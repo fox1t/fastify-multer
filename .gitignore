@@ -68,3 +68,4 @@ junit-testresults.xml
 # Misc
 package-lock.json
 package-lock.json
+/.idea/
