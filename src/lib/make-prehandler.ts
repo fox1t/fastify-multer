@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import is from 'type-is'
-import Busboy, { BusboyHeaders } from '@fastify/busboy'
+import { Busboy, BusboyHeaders } from '@fastify/busboy'
 import extend from 'xtend'
 import onFinished from 'on-finished'
 import appendField from 'append-field'
