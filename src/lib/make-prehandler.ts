@@ -44,12 +44,13 @@ function makePreHandler(setup: Setup) {
     try {
       busboy = new Busboy({
         headers: rawRequest.headers,
-        limits: limits,
-        preservePath: preservePath,
+        limits,
+        preservePath,
       })
     } catch (err) {
-      return next(err)
+      return err instanceof Error ? next(err) : next(new Error());
     }
+
 
     const appender = new FileAppender(fileStrategy, request)
     let isDone = false
@@ -183,7 +184,7 @@ function makePreHandler(setup: Setup) {
         storage._handleFile(request, file, function(error?: Error | null, info?: Partial<File>) {
           if (aborting) {
             appender.removePlaceholder(placeholder)
-            uploadedFiles.push(extend(file, info))
+            uploadedFiles.push(info ? extend(file, info) : file)
             return pendingWrites.decrement()
           }
 
@@ -193,7 +194,7 @@ function makePreHandler(setup: Setup) {
             return abortWithError(error)
           }
 
-          const fileInfo = extend(file, info)
+          const fileInfo = info ? extend(file, info) : file
 
           appender.replacePlaceholder(placeholder, fileInfo)
           uploadedFiles.push(fileInfo)
