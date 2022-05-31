@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import is from 'type-is'
-import Busboy from 'busboy'
+import { Busboy, BusboyHeaders } from '@fastify/busboy'
 import extend from 'xtend'
 import onFinished from 'on-finished'
 import appendField from 'append-field'
@@ -39,16 +39,16 @@ function makePreHandler(setup: Setup) {
 
     request.body = Object.create(null)
 
-    let busboy: busboy.Busboy
+    let busboy: Busboy
 
     try {
       busboy = new Busboy({
-        headers: rawRequest.headers,
+        headers: rawRequest.headers as BusboyHeaders,
         limits: limits,
         preservePath: preservePath,
       })
     } catch (err) {
-      return next(err)
+      return next(err as Error)
     }
 
     const appender = new FileAppender(fileStrategy, request)
