@@ -70,4 +70,4 @@ package-lock.json
 package-lock.json
 
 # IDE's configuration
-.idea/
+/.idea/
