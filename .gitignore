@@ -68,4 +68,6 @@ junit-testresults.xml
 # Misc
 package-lock.json
 package-lock.json
+
+# IDE's configuration
 /.idea/

@@ -4,10 +4,13 @@ import diskStorage from './storage/disk'
 import memoryStorage from './storage/memory'
 import MulterError from './lib/multer-error'
 import contentParser from './lib/content-parser'
+import 'fastify'
+import { isMultipart } from './lib/content-parser'
 
 import {
   Field,
   File,
+  FilesObject,
   Options,
   FileFilter,
   FileFilterCallback,
@@ -15,6 +18,16 @@ import {
   StorageEngine,
 } from './interfaces'
 import { Strategy } from './lib/file-appender'
+
+type FilesInRequest = FilesObject | Partial<File>[]
+
+declare module 'fastify' {
+  interface FastifyRequest {
+    isMultipart: typeof isMultipart
+    file: File
+    files: FilesInRequest
+  }
+}
 
 function allowAll(_req: FastifyRequest, _file: File, cb: FileFilterCallback) {
   cb(null, true)
