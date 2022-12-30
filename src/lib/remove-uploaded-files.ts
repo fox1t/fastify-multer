@@ -14,7 +14,7 @@ function removeUploadedFiles(
   }
 
   function handleFile(idx: number) {
-    const file = uploadedFiles[idx]
+    const file = uploadedFiles[idx]!
 
     remove(file, function(err?: RemoveUploadedFileError | null) {
       if (err) {
