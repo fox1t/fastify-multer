@@ -309,11 +309,11 @@ When encountering an error, Multer will delegate the error to Fastify. You can
 display a nice error page using [the standard fastify way](https://www.fastify.io/docs/v2.0.x/Server/#seterrorhandler).
 
 If you want to catch errors specifically from Multer, you can call the
-middleware function by yourself. Also, if you want to catch only [the Multer errors](https://github.com/fox1t/multer/blob/master/src/lib/multer-error.ts), you can use the `MulterError` class that is attached to the `multer` object itself (e.g. `err instanceof multer.MulterError`).
+middleware function by yourself. Also, if you want to catch only [the Multer errors](https://github.com/fox1t/fastify-multer/blob/master/src/lib/multer-error.ts), you can use the `MulterError` class that is attached to the `multer` object itself (e.g. `err instanceof multer.MulterError`).
 
 ## Custom storage engine
 
-For information on how to build your own storage engine, see [Multer Storage Engine](https://github.com/fox1t/multer/blob/master/StorageEngine.md).
+For information on how to build your own storage engine, see [Multer Storage Engine](https://github.com/fox1t/fastify-multer/blob/master/StorageEngine.md).
 
 ## License
 
