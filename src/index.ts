@@ -60,7 +60,7 @@ class Multer {
       const fileFilter = this.fileFilter
       const filesLeft = Object.create(null)
 
-      fields.forEach(function(field) {
+      fields.forEach(function (field) {
         if (typeof field.maxCount === 'number') {
           filesLeft[field.name] = field.maxCount
         } else {
@@ -127,7 +127,7 @@ interface MulterFactory {
   default: MulterFactory
 }
 
-const multer: any = function(options?: Options) {
+const multer: any = function (options?: Options) {
   if (options === undefined) {
     return new Multer({})
   }
