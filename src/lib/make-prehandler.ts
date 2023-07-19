@@ -1,15 +1,15 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
-import is from 'type-is'
 import { Busboy, BusboyHeaders } from '@fastify/busboy'
-import extend from 'xtend'
-import onFinished from 'on-finished'
 import appendField from 'append-field'
+import { FastifyReply, FastifyRequest } from 'fastify'
+import onFinished from 'on-finished'
+import is from 'type-is'
+import extend from 'xtend'
 
+import { File, Setup } from '../interfaces'
 import Counter from './counter'
-import MulterError, { ErrorMessages } from './multer-error'
 import FileAppender from './file-appender'
+import MulterError, { ErrorMessages } from './multer-error'
 import removeUploadedFiles, { RemoveUploadedFileError } from './remove-uploaded-files'
-import { Setup, File } from '../interfaces'
 
 type UploadError = { storageErrors?: RemoveUploadedFileError[] } & Error
 
@@ -18,11 +18,7 @@ function drainStream(stream: NodeJS.ReadableStream) {
 }
 
 function makePreHandler(setup: Setup) {
-  return function multerPreHandler(
-    request: FastifyRequest,
-    _: FastifyReply,
-    next: (err?: Error) => void,
-  ) {
+  return (request: FastifyRequest, _: FastifyReply, next: (err?: Error) => void) => {
     const rawRequest = request.raw
 
     if (!is(rawRequest, ['multipart'])) {
@@ -68,7 +64,7 @@ function makePreHandler(setup: Setup) {
       drainStream(rawRequest)
       busboy.removeAllListeners()
 
-      onFinished(rawRequest, function() {
+      onFinished(rawRequest, function () {
         next(err)
       })
     }
@@ -85,22 +81,23 @@ function makePreHandler(setup: Setup) {
       }
       errorOccured = true
 
-      pendingWrites.onceZero(function() {
+      pendingWrites.onceZero(function () {
         function remove(file: File, cb: (error?: Error | null) => void) {
           storage._removeFile(request, file, cb)
         }
 
-        removeUploadedFiles(uploadedFiles, remove, function(
-          err: Error | null,
-          storageErrors: RemoveUploadedFileError[],
-        ) {
-          if (err) {
-            return done(err)
-          }
+        removeUploadedFiles(
+          uploadedFiles,
+          remove,
+          function (err: Error | null, storageErrors: RemoveUploadedFileError[]) {
+            if (err) {
+              return done(err)
+            }
 
-          uploadError.storageErrors = storageErrors
-          done(uploadError)
-        })
+            uploadError.storageErrors = storageErrors
+            done(uploadError)
+          },
+        )
       })
     }
 
@@ -109,7 +106,7 @@ function makePreHandler(setup: Setup) {
     }
 
     // handle text field data
-    busboy.on('field', function(fieldname, value, fieldnameTruncated, valueTruncated) {
+    busboy.on('field', function (fieldname, value, fieldnameTruncated, valueTruncated) {
       if (fieldnameTruncated) {
         return abortWithCode('LIMIT_FIELD_KEY')
       }
@@ -128,7 +125,7 @@ function makePreHandler(setup: Setup) {
     })
 
     // handle files
-    busboy.on('file', function(fieldname, fileStream, filename, encoding, mimetype) {
+    busboy.on('file', function (fieldname, fileStream, filename, encoding, mimetype) {
       // don't attach to the files object, if there is no file
       if (!filename) {
         return fileStream.resume()
@@ -150,7 +147,7 @@ function makePreHandler(setup: Setup) {
 
       const placeholder = appender.insertPlaceholder(file)
 
-      fileFilter(request, file, function(err: UploadError | null, includeFile?: boolean) {
+      fileFilter(request, file, function (err: UploadError | null, includeFile?: boolean) {
         if (err) {
           appender.removePlaceholder(placeholder)
           return abortWithError(err)
@@ -170,17 +167,17 @@ function makePreHandler(setup: Setup) {
           value: fileStream,
         })
 
-        fileStream.on('error', function(error: Error) {
+        fileStream.on('error', function (error: Error) {
           pendingWrites.decrement()
           abortWithError(error)
         })
 
-        fileStream.on('limit', function() {
+        fileStream.on('limit', function () {
           aborting = true
           abortWithCode('LIMIT_FILE_SIZE', fieldname)
         })
 
-        storage._handleFile(request, file, function(error?: Error | null, info?: Partial<File>) {
+        storage._handleFile(request, file, function (error?: Error | null, info?: Partial<File>) {
           if (aborting) {
             appender.removePlaceholder(placeholder)
             uploadedFiles.push(info ? extend(file, info) : file)
@@ -203,19 +200,19 @@ function makePreHandler(setup: Setup) {
       })
     })
 
-    busboy.on('error', function(err: Error) {
+    busboy.on('error', function (err: Error) {
       abortWithError(err)
     })
-    busboy.on('partsLimit', function() {
+    busboy.on('partsLimit', function () {
       abortWithCode('LIMIT_PART_COUNT')
     })
-    busboy.on('filesLimit', function() {
+    busboy.on('filesLimit', function () {
       abortWithCode('LIMIT_FILE_COUNT')
     })
-    busboy.on('fieldsLimit', function() {
+    busboy.on('fieldsLimit', function () {
       abortWithCode('LIMIT_FIELD_COUNT')
     })
-    busboy.on('finish', function() {
+    busboy.on('finish', function () {
       readFinished = true
       indicateDone()
     })
