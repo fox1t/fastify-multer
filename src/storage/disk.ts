@@ -8,7 +8,7 @@ import mkdirp from 'mkdirp'
 import { GetFileName, GetDestination, DiskStorageOptions, File, StorageEngine } from '../interfaces'
 
 const getFilename: GetFileName = (_req, _file, cb) => {
-  crypto.randomBytes(16, function(err, raw) {
+  crypto.randomBytes(16, function (err, raw) {
     cb(err, err ? undefined : raw.toString('hex'))
   })
 }
@@ -26,7 +26,7 @@ class DiskStorage implements StorageEngine {
 
     if (typeof opts.destination === 'string') {
       mkdirp.sync(opts.destination)
-      this.getDestination = function(_$0, _$1, cb) {
+      this.getDestination = function (_$0, _$1, cb) {
         cb(null, opts.destination as string)
       }
     } else {
